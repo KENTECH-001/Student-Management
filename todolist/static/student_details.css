@@ -1,0 +1,86 @@
+
+/* Page layout */
+body {
+    margin: 0;
+    padding: 40px 20px;
+    font-family: Arial, sans-serif;
+    background-color: #f4f5fb;
+    color: #25243a;
+}
+
+/* Student details card */
+body h2 {
+    max-width: 600px;
+    margin: 20px auto;
+    padding: 28px;
+    background-color: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 4px 18px rgba(35, 30, 75, 0.08);
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 2.2;
+    color: #4b4961;
+    overflow-wrap: anywhere;
+}
+
+/* Highlight the student information */
+body h2 br {
+    display: block;
+    content: "";
+    margin-bottom: 5px;
+}
+
+/* Student not found */
+body h1 {
+    max-width: 600px;
+    margin: 40px auto;
+    padding: 30px;
+    text-align: center;
+    background-color: #ffffff;
+    color: #7059E8;
+    border-radius: 12px;
+    font-size: 24px;
+    box-shadow: 0 4px 18px rgba(35, 30, 75, 0.08);
+}
+
+/* Return to dashboard */
+a:has(button) {
+    display: block;
+    width: fit-content;
+    margin: 25px auto;
+    text-decoration: none;
+}
+
+a button {
+    padding: 13px 24px;
+    background-color: #7059E8;
+    color: #ffffff;
+    border: none;
+    border-radius: 7px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.2s, transform 0.2s;
+}
+
+a button:hover {
+    background-color: #5D47D1;
+    transform: translateY(-1px);
+}
+
+/* Mobile layout */
+@media (max-width: 600px) {
+    body {
+        padding: 20px 14px;
+    }
+
+    body h2 {
+        padding: 20px;
+        font-size: 14px;
+        line-height: 2;
+    }
+
+    body h1 {
+        font-size: 21px;
+    }
+}
