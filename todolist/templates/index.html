@@ -1,0 +1,196 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EduManage Academy</title>
+    <link rel="stylesheet" href="{% static 'style.css' %}">
+</head>
+
+<body>
+
+    <!-- Navigation -->
+    <header class="navbar">
+        <a href="index.html" class="logo">
+            <span class="logo-icon">🎓</span>
+            <span>EduManage <small>Academy</small></span>
+        </a>
+
+        <nav>
+            <a href="#home" class="active">Home</a>
+            <a href="#about">About Us</a>
+            <a href="#academics">Academics</a>
+            <a href="#contact">Contact</a>
+        </nav>
+
+        <div class="nav-buttons">
+            <a href="{% url 'login' %}" class="login-btn">Login</a>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero" id="home">
+
+        <div class="hero-text">
+            <span class="welcome">🎓 Welcome to EduManage Academy</span>
+
+            <h1>
+                Building Bright
+                <span>Futures, Together</span>
+            </h1>
+
+            <p>
+                At EduManage Academy, we provide a supportive
+                and inspiring environment where students learn,
+                grow and achieve their dreams. We are committed
+                to excellence in education and character development.
+            </p>
+
+            <div class="hero-buttons">
+                <a href="{% url 'register' %}" class="primary-btn">
+                    Create Account <span>→</span>
+                </a>
+
+                <a href="#about" class="secondary-btn">
+                    Learn More →
+                </a>
+            </div>
+
+            <div class="school-stats">
+                <div>
+                    <h3>500+</h3>
+                    <p>Students</p>
+                </div>
+
+                <div>
+                    <h3>30+</h3>
+                    <p>Teachers</p>
+                </div>
+
+                <div>
+                    <h3>15+</h3>
+                    <p>Years of Excellence</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="hero-images">
+            <img
+                src="https://images.unsplash.com/photo-1562774053-701939374585?auto=format&fit=crop&w=1200&q=85"
+                alt="School building"
+                class="building-img"
+            >
+
+            <div class="image-label">
+                <span>🏫</span>
+                <div>
+                    <h4>A Place to Learn and Grow</h4>
+                    <p>Inspiring excellence every day</p>
+                </div>
+            </div>
+        </div>
+
+    </section>
+
+    <!-- About Section -->
+    <section class="about" id="about">
+        <div class="section-heading">
+            <span>ABOUT OUR SCHOOL</span>
+            <h2>Education That Shapes the Future</h2>
+            <p>
+                We believe every child deserves the opportunity
+                to discover their potential and become a leader.
+            </p>
+        </div>
+
+        <div class="about-content">
+            <img
+                src="https://images.unsplash.com/photo-1503676260728-1c00da094a0b?auto=format&fit=crop&w=1000&q=85"
+                alt="Students learning together"
+            >
+
+            <div class="about-text">
+                <h2>More Than Just a School</h2>
+
+                <p>
+                    Our school provides a welcoming environment
+                    where students develop academically, socially
+                    and creatively.
+                </p>
+
+                <p>
+                    With dedicated teachers, modern facilities
+                    and a commitment to discipline, we prepare
+                    our students for a successful future.
+                </p>
+
+                <a href="#academics" class="primary-btn">
+                    Discover Our School →
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- School Features -->
+    <section class="features" id="academics">
+        <div class="section-heading">
+            <span>WHY CHOOSE US?</span>
+            <h2>A Better Learning Experience</h2>
+        </div>
+
+        <div class="feature-container">
+
+            <div class="feature-card">
+                <div class="feature-icon">🎓</div>
+                <h3>Quality Education</h3>
+                <p>
+                    We provide quality learning that helps
+                    students build a strong academic foundation.
+                </p>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-icon">👨‍🏫</div>
+                <h3>Dedicated Teachers</h3>
+                <p>
+                    Our teachers guide, support and inspire
+                    every student to reach their potential.
+                </p>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-icon">🛡️</div>
+                <h3>Safe Environment</h3>
+                <p>
+                    We promote respect, discipline and a
+                    welcoming environment for all students.
+                </p>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- Call to Action -->
+    <section class="join-section">
+        <h2>Ready to Begin Your Journey?</h2>
+        <p>
+            Join our school community and take the next step
+            towards a brighter future.
+        </p>
+
+        <a href="{% url 'register' %}" class="join-btn">
+            Create Your Account →
+        </a>
+    </section>
+
+    <!-- Footer -->
+    <footer id="contact">
+        <div class="footer-logo">EduManage Academy</div>
+        <p>Building Bright Futures, Together.</p>
+        <p>&copy; 2026 EduManage Academy. All rights reserved.</p>
+    </footer>
+
+</body>
+</html>

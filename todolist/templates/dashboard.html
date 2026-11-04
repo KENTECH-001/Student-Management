@@ -1,0 +1,200 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Management System</title>
+    <link rel="stylesheet" href="{% static 'dashboard.css' %}">
+</head>
+<body>
+    {% for message in messages %}
+    <h3>
+    {{message}}
+    </h3>       
+    {% endfor %}
+
+    <div class="dashboard">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <h2 class="logo">Edu<span>Manage</span></h2>
+
+            <p class="menu-title">MAIN MENU</p>
+
+            <nav>
+                <a href="#" class="active">▦ Dashboard</a>
+                <a href="{% url 'student_class' %}">▤ Classes</a>
+                <a href="{% url 'attendance' %}">▣ Attendance</a>
+                <a href="#">▧ Results</a>
+                <a href="#">⚙ Settings</a>
+            </nav>
+            
+
+            <div class="sidebar-bottom">
+                <div class="admin-avatar">A</div>
+                <div>
+                    <strong>Admin User</strong>
+                    <small>Administrator</small>
+                    <a href="{% url 'logout' %}">Logout</a>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+
+            <header class="topbar">
+                <div>
+                    <h1>Dashboard</h1>
+                    <p>Welcome back! Here's what's happening today.</p>
+                </div>
+
+                <div class="profile">
+                    <span class="notification">🔔</span>
+                    <div class="profile-avatar">A</div>
+                </div>
+            </header>
+
+            <!-- Summary Cards -->
+            <section class="stats">
+
+                <div class="stat-card">
+                    <div class="stat-icon purple">♙</div>
+                    <p>Total Students</p>
+                    <h2>{{names|length}}</h2>
+                    <small>Registered students</small>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-icon green">▤</div>
+                    <p>Total Classes</p>
+                    <h2>6</h2>
+                    <small>Active classes</small>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-icon orange">✓</div>
+                    <p>Attendance</p>
+                    <h2>92%</h2>
+                    <small>Today's attendance</small>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-icon blue">♧</div>
+                    <p>Teachers</p>
+                    <h2>{{list|length}}</h2>
+                    <small>Registered teachers</small>
+                </div>
+
+            </section>
+
+            <!-- Students Section -->
+            <section class="content-card">
+
+                <div class="section-header">
+                    <div>
+                        <h2>Recent Students</h2>
+                        <p>Manage your recently registered students.</p>
+                    </div>
+
+                    <a href="{% url 'new_student' %}" class="add-button">+ Add Student</a>
+                </div>
+
+                <div class="search-row">
+                    <form action="student_details" method="GET">
+                    <input type="search" name="search" placeholder="Search students...">
+                    <button type="submit">Search</button>
+                    </form>
+                </div>
+
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Student Name </th>
+                                <th>Student ID</th>
+                                <th>Class</th>
+                                <th>Email</th>
+                                <th>Gender</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for name in names|slice:":5" %}
+                            <tr>
+                                <td>
+                                    <div class="student">
+                                        <div class="student-avatar purple-bg">{{name.firstName}}</div>
+                                        <strong>{{name.surname}}</strong>
+                                    </div>
+                                </td>
+                                <td>{{name.student_id}}</td>
+                                <td>{{name.studentClass}}</td>
+                                <td>{{name.email}}</td>
+                                <td>{{name.registrationDate}}</td>
+                                <td><span class="status active-status">{{name.gender}}</span></td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                No records Yet
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="table-footer">
+                    Showing 4 sample students
+                    <a href="{% url 'list_students' %}">View all students →</a>
+                </div>
+
+            </section>
+
+            <!-- Bottom Section -->
+            <section class="bottom-grid">
+
+                <div class="content-card">
+                    <h2>Quick Actions</h2>
+                    <p class="muted">Common administrative tasks</p>
+
+                    <div class="quick-actions">
+                        <a href="{% url 'new_student' %}">＋ Register Student</a>
+                        <a href="{% url 'update_student' %}">✓ Update Student's Data</a>
+                        <a href="{% url 'delete_student' %}">✓ Delete Student</a>
+                        <a href="{% url 'count' %}">▤ Manage Classes</a>
+                        <a href="{% url 'attendance' %}">✓ Record Attendance</a>
+                    </div>
+                </div>
+
+                <div class="content-card">
+                    <h2>School Overview</h2>
+                    <p class="muted">Your school at a glance</p>
+
+                    <div class="overview-item">
+                        <span>Students</span>
+                        <strong>{{names|length}}</strong>
+                    </div>
+
+                    <div class="overview-item">
+                        <span>Teachers</span>
+                        <strong>{{list|length}}</strong>
+                    </div>
+
+                    <div class="overview-item">
+                        <span>Classes</span>
+                        <strong>6</strong>
+                    </div>
+                </div>
+
+            </section>
+
+            <footer>
+                © 2026 EduManage Student Management System
+            </footer>
+
+        </main>
+
+    </div>
+
+</body>
+</html>

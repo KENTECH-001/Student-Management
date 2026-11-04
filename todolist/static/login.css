@@ -1,0 +1,121 @@
+* {
+    box-sizing: border-box;
+}
+
+body {
+    min-height: 100vh;
+    margin: 0;
+    padding: 48px 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: #f5f6fb;
+    color: #252641;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+body > h1 {
+    width: min(100%, 440px);
+    margin: 0;
+    padding: 30px 36px 10px;
+    border-radius: 14px 14px 0 0;
+    background: #ffffff;
+    color: #252641;
+    font-size: 30px;
+    line-height: 1.2;
+    text-align: center;
+}
+
+body > h2 {
+    width: min(100%, 440px);
+    margin: 0;
+    padding: 10px 36px;
+    background: #ffffff;
+    color: #b42332;
+    font-size: 14px;
+    font-weight: normal;
+    text-align: center;
+}
+
+form {
+    width: min(100%, 440px);
+    padding: 20px 36px 30px;
+    border-radius: 0 0 14px 14px;
+    background: #ffffff;
+    box-shadow: 0 12px 35px rgba(37, 38, 65, 0.09);
+}
+
+form p {
+    margin: 16px 0 7px;
+    color: #343454;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+form input {
+    width: 100%;
+    min-height: 46px;
+    padding: 12px 14px;
+    border: 1px solid #e2e3ed;
+    border-radius: 8px;
+    outline: none;
+    background: #ffffff;
+    color: #252641;
+    font: inherit;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+form input::placeholder {
+    color: #9899ac;
+}
+
+form input:focus {
+    border-color: #6438f5;
+    box-shadow: 0 0 0 3px rgba(100, 56, 245, 0.14);
+}
+
+form button {
+    width: 100%;
+    min-height: 48px;
+    margin-top: 22px;
+    border: 0;
+    border-radius: 8px;
+    background: #6438f5;
+    color: #ffffff;
+    cursor: pointer;
+    font: inherit;
+    font-weight: 700;
+    transition: background-color 0.2s, transform 0.2s;
+}
+
+form button:hover {
+    transform: translateY(-1px);
+    background: #4820c9;
+}
+
+form button:focus-visible {
+    outline: 3px solid rgba(100, 56, 245, 0.35);
+    outline-offset: 3px;
+}
+
+@media (max-width: 480px) {
+    body {
+        justify-content: flex-start;
+        padding: 32px 16px;
+    }
+
+    body > h1 {
+        padding: 26px 24px 10px;
+        font-size: 26px;
+    }
+
+    body > h2 {
+        padding-right: 24px;
+        padding-left: 24px;
+    }
+
+    form {
+        padding: 16px 24px 26px;
+    }
+}

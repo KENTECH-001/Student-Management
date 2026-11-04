@@ -1,0 +1,50 @@
+{% load static %}
+<link rel="stylesheet" href="{% static 'delete.css' %}">
+
+<h1>
+    Enter The Student's Student ID That You Want To Delete
+</h1>
+<form action="{% url 'delete_student' %}" method="GET">
+    <input type="text" name="id" placeholder="Enter Student ID">
+    <button type="submit"> Find Student</button>
+</form>
+{% for message in messages %}
+<h3>
+    {{message}}
+</h3>
+{% endfor %}
+
+{% if detail %}
+
+    <form action="{% url 'delete_student' %}" method="POST">
+        {% csrf_token %}
+
+        <input type="hidden" name="id"
+               value="{{ detail.student_id }}">
+
+        <input type="text" name="firstname"
+               value="{{ detail.firstName }}" placeholder="First Name" required>
+
+        <input type="text" name="surname"
+               value="{{ detail.surname }}" placeholder="Surname" required>
+
+        <input type="text" name="middlename"
+               value="{{ detail.middleName }}" placeholder="Middle Name">
+
+        <input type="email" name="email"
+               value="{{ detail.email }}" placeholder="Email" required>
+
+        <input type="text" name="class"
+               value="{{ detail.studentClass }}" placeholder="Class" required>
+
+        <input type="text" name="gender"
+               value="{{ detail.gender }}" placeholder="Gender" required>
+
+        <button type="submit">Delete Student</button>
+    </form>
+    {% else %}
+    <h3>
+        Student Not Found
+    </h3> 
+    {% endif %}
+
