@@ -1,0 +1,24 @@
+{% load static %}
+<link rel="stylesheet" href="{% static 'attendance.css' %}">
+<h1>
+    Mark The Attendance For 
+</h1>
+<table>
+    <thead>
+        <tr>
+            <th>Student ID</th>
+            <th>Student Name</th>
+            <th>Status</th>
+            <th>Date</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for data in datas %} 
+        <tr>
+            <td>{{ data.student_id }}</td>
+            <td>{{ data.firstName }} {{ data.surname}} {{ data.middleName }}</td>
+        </tr>
+
+    </tbody>
+    {% endfor %}
+</table>

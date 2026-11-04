@@ -1,0 +1,173 @@
+* {
+    box-sizing: border-box;
+}
+
+body {
+    min-height: 100vh;
+    margin: 0;
+    padding: 64px 24px;
+    background: #f5f6fb;
+    color: #252641;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+.count-page {
+    width: min(100%, 1080px);
+    margin: 0 auto;
+}
+
+.count-header {
+    margin-bottom: 32px;
+    text-align: center;
+}
+
+.count-eyebrow {
+    margin: 0 0 10px;
+    color: #7564e8;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+}
+
+.count-header h1 {
+    margin: 0;
+    font-size: clamp(28px, 4vw, 38px);
+    letter-spacing: -0.8px;
+}
+
+.count-description {
+    margin: 12px 0 0;
+    color: #898ba4;
+    font-size: 15px;
+    line-height: 1.6;
+}
+
+.count-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 20px;
+}
+
+.count-card {
+    position: relative;
+    overflow: hidden;
+    padding: 25px;
+    border: 1px solid #eeedf7;
+    border-radius: 14px;
+    background: #fff;
+    box-shadow: 0 5px 20px rgba(35, 35, 70, 0.05);
+    transition: transform 180ms ease, box-shadow 180ms ease;
+}
+
+.count-card::before {
+    position: absolute;
+    inset: 0 auto 0 0;
+    width: 4px;
+    background: #7564e8;
+    content: "";
+}
+
+.count-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 9px 25px rgba(35, 35, 70, 0.09);
+}
+
+.count-card h2 {
+    margin: 0 0 18px;
+    color: #666881;
+    font-size: 15px;
+    font-weight: 600;
+}
+
+.count-card p {
+    display: flex;
+    align-items: baseline;
+    gap: 9px;
+    margin: 0;
+}
+
+.count-card strong {
+    color: #252641;
+    font-size: 36px;
+    line-height: 1;
+}
+
+.count-card span {
+    color: #898ba4;
+    font-size: 13px;
+}
+
+.count-grid > .count-return-form {
+    grid-column: 1 / -1;
+    display: flex;
+    justify-content: center;
+}
+
+.count-return {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 150px;
+    min-height: 48px;
+    padding: 12px 28px;
+    border: 1px solid #7564e8;
+    border-radius: 8px;
+    background: #7564e8;
+    box-shadow: 0 4px 10px rgba(117, 100, 232, 0.2);
+    color: #fff;
+    font-family: inherit;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 180ms ease, box-shadow 180ms ease, transform 180ms ease;
+}
+
+.count-return:hover {
+    transform: translateY(-2px);
+    background: #5e4bd0;
+    box-shadow: 0 7px 16px rgba(94, 75, 208, 0.28);
+}
+
+.count-return:focus-visible {
+    outline: 3px solid rgba(117, 100, 232, 0.35);
+    outline-offset: 3px;
+}
+
+@media (max-width: 700px) {
+    body {
+        padding: 44px 20px;
+    }
+
+    .count-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 14px;
+    }
+
+    .count-card {
+        padding: 21px;
+    }
+}
+
+@media (max-width: 420px) {
+    body {
+        padding: 32px 16px;
+    }
+
+    .count-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .count-header {
+        margin-bottom: 24px;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .count-card {
+        transition: none;
+    }
+
+    .count-card:hover {
+        transform: none;
+    }
+}

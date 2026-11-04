@@ -1,0 +1,32 @@
+{% load static %}
+<link rel="stylesheet" href="{% static 'register.css' %}">
+<h1>
+    Register Now
+</h1>
+{% for message in messages %}
+<h2>
+    {{message}}
+</h2>
+{% endfor %}
+
+<form action="register" method="POST">
+    {% csrf_token %}
+    <p>
+        Username
+    </p>
+    <input type="text" name="username" id="username" placeholder="Enter Your Username" required>
+    <p>
+        Email
+    </p>
+    <input type="email" name="email" id="email" placeholder="Enter Your Email" required>
+    <p>
+        Password
+    </p>
+    <input type="password" name="password" placeholder="Enter Your Password" required>
+    <p>
+        Confirm Password
+    </p>
+    <input type="password" name="confirm_password" placeholder="Enter Your Password Again" required><br>
+    <button type="submit">Register</button>
+</form>
+<p>Already Have An Account? <a href="{% url 'login' %}">Login</a></p>

@@ -1,0 +1,30 @@
+{% load static %}
+<link rel="stylesheet" href="{% static 'classes.css' %}">
+
+<div class="class_table">
+    <table>
+        <thead>
+            <tr>
+                <th>Student Name</th>
+                <th>Student ID</th>
+            </tr>
+        </thead>
+            <tbody>
+                {% for tb in tb2 %}
+                <tr>
+                <td>
+                {{tb.surname}} {{tb.firstName}}
+                </td>
+                <td>
+                {{tb.student_id}}
+                </td>
+                </tr>
+                {% empty %}
+                <tr>
+                <td colspan="2">No students found in this class.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+    </table>
+</div>
+<a href="{% url 'dashboard' %}"><button>Return</button></a>
