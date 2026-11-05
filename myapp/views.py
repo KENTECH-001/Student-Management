@@ -32,7 +32,7 @@ def register(request):
             else:
                 user = User.objects.create_user(username=username, email=email, password=password)
                 user.save()
-                Teacher.objects.create(username=username, email=email, password=password)
+                Teacher.objects.create(username=username, email=email)
                 messages.success(request, 'You Have Successfully Registered')
                 return redirect('login')
         else:
