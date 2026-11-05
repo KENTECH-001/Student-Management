@@ -5,6 +5,9 @@ class Teacher(models.Model):
     username = models.CharField(max_length=100)
     email = models.EmailField(max_length=100)
 
+    class Meta:
+        db_table= 'myapp_teacher'
+
 class Student(models.Model):
     student_id = models.CharField(max_length=200, unique=True)
     firstName = models.CharField(max_length=200)
