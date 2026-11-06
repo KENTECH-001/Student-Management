@@ -1,7 +1,7 @@
 {% load static %}
-<link rel="stylesheet" href="{% static 'register.css' %}">
+<link rel="stylesheet" href="{% static 'register_teacher.css' %}">
 <h1>
-    Register Now
+    Register A New Teacher
 </h1>
 {% for message in messages %}
 <h2>
@@ -9,7 +9,7 @@
 </h2>
 {% endfor %}
 
-<form action="register" method="POST">
+<form action="register_teacher" method="POST">
     {% csrf_token %}
     <p>
         Username

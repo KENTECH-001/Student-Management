@@ -2,7 +2,7 @@ from django.shortcuts import render
 from django.contrib.auth.models import User
 from django.shortcuts import redirect, render
 from django.contrib import messages, auth
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required, user_passes_test
 from .models import Student, Teacher, Student_attendance
 from django.views.decorators.cache import never_cache
 from rest_framework.decorators import api_view, permission_classes
@@ -10,35 +10,95 @@ from .serializers import StudentSerializer
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
+from django.db import transaction
 
 # Create your views here.
 def index(request):
     return render(request, 'index.html')
 
+def admin_registration(request):
+    if request.method == 'POST':
+        username = request.POST.get('username')
+        password = request.POST.get('password')
+        confirm_password = request.POST.get('confirm_password')
 
-def register(request):
+        if User.objects.filter(is_superuser=True).exists():
+            messages.error(request, 'The Admin is already created. Login instead.')
+            return redirect('login')
+
+        if password != confirm_password:
+            messages.error(request, 'Passwords do not match!')
+            return redirect('admin_registration')
+
+        user = User.objects.create_superuser(
+            username=username,
+            password=password
+        )
+
+        messages.success(request, 'Admin account created successfully!')
+        return redirect('login')
+
+    return render(request, 'admin_registration.html')
+
+
+def is_admin(user):
+    return user.is_authenticated and user.is_superuser
+
+
+@login_required
+@user_passes_test(is_admin)
+def register_teacher(request):
     if request.method == 'POST':
         username = request.POST.get('username')
         email = request.POST.get('email')
         password = request.POST.get('password')
         confirm_password = request.POST.get('confirm_password')
-        if password == confirm_password:
-            if User.objects.filter(username=username).exists():
-                messages.error(request, 'Username Already Exists!')
-                return redirect('register')
-            if User.objects.filter(email=email).exists():
-                messages.error(request, 'Email Already Exists!')
-                return redirect('register')
-            else:
-                user = User.objects.create_user(username=username, email=email, password=password)
-                user.save()
-                Teacher.objects.create(username=username, email=email)
-                messages.success(request, 'You Have Successfully Registered')
-                return redirect('login')
-        else:
+
+        if password != confirm_password:
             messages.error(request, 'The Password Does Not Match!')
-            return redirect('register')
-    return render(request, 'register.html')
+            return redirect('register_teacher')
+
+        if User.objects.filter(username=username).exists():
+            messages.error(request, 'Username Already Exists!')
+            return redirect('register_teacher')
+
+        if User.objects.filter(email=email).exists():
+            messages.error(request, 'Email Already Exists!')
+            return redirect('register_teacher')
+        else:
+            with transaction.atomic():
+                user = User.objects.create_user(
+                username=username,
+                email=email,
+                password=password
+                )
+                Teacher.objects.create(
+                user=user
+                )
+
+                messages.success(request, 'Teacher Successfully Registered!')
+                return redirect('login')
+
+    return render(request, 'register_teacher.html')
+
+
+def new_student(request):
+    if request.method == 'POST':
+        student_ID = request.POST.get('student_ID')
+        student_firstName = request.POST.get('student_firstName')
+        student_surname = request.POST.get('student_surname')
+        student_middleName = request.POST.get('student_middleName')
+        student_email = request.POST.get('student_email')
+        student_class = request.POST.get('student_class')
+        student_gender = request.POST.get('student_gender')
+        student = Student(student_id = student_ID, firstName = student_firstName, surname = student_surname, middleName = student_middleName, email = student_email, studentClass = student_class, gender = student_gender )
+        student.save()
+        messages.success(request, 'You Have Successfully Added The Student')
+        return redirect('dashboard')
+    return render(request, 'new_student.html')
+
+
+
 
 def login(request):
     if request.method == 'POST':
@@ -58,20 +118,6 @@ def logout(request):
     messages.success(request, 'You Have Successfully Logged Out!')
     return render(request, 'index.html')
 
-def new_student(request):
-    if request.method == 'POST':
-        student_ID = request.POST.get('student_ID')
-        student_firstName = request.POST.get('student_firstName')
-        student_surname = request.POST.get('student_surname')
-        student_middleName = request.POST.get('student_middleName')
-        student_email = request.POST.get('student_email')
-        student_class = request.POST.get('student_class')
-        student_gender = request.POST.get('student_gender')
-        student = Student(student_id = student_ID, firstName = student_firstName, surname = student_surname, middleName = student_middleName, email = student_email, studentClass = student_class, gender = student_gender )
-        student.save()
-        messages.success(request, 'You Have Successfully Added The Student')
-        return redirect('dashboard')
-    return render(request, 'new_student.html')
 
 @never_cache
 @login_required(login_url='login')
