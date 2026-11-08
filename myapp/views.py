@@ -3,7 +3,7 @@ from django.contrib.auth.models import User
 from django.shortcuts import redirect, render
 from django.contrib import messages, auth
 from django.contrib.auth.decorators import login_required, user_passes_test
-from .models import Student, Teacher, Student_attendance
+from .models import Student, Teacher, Student_attendance, StudentLogin
 from django.views.decorators.cache import never_cache
 from rest_framework.decorators import api_view, permission_classes
 from .serializers import StudentSerializer
@@ -11,8 +11,14 @@ from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
 from django.db import transaction
-
+from django.core.mail import send_mail
+import secrets
+from datetime import timedelta
+from django.utils import timezone
+from django.contrib.auth.hashers import make_password, check_password
 # Create your views here.
+
+
 def index(request):
     return render(request, 'index.html')
 
@@ -75,11 +81,127 @@ def register_teacher(request):
                 Teacher.objects.create(
                 user=user
                 )
-
                 messages.success(request, 'Teacher Successfully Registered!')
                 return redirect('login')
-
+            
     return render(request, 'register_teacher.html')
+
+
+def confirm_student_id(request):
+    if request.method == 'POST':
+        student_id = request.POST.get('student_id')
+
+        student = Student.objects.filter(
+            student_id=student_id
+        ).first()
+
+        if not student:
+            messages.error(request, 'Student ID does not exist!')
+            return redirect('confirm_student_id')
+
+        if StudentLogin.objects.filter(student=student).exists():
+            messages.error(request, 'Account already exists!')
+            return redirect('confirm_student_id')
+
+        request.session['student_id'] = student.student_id
+        request.session['verification_passed'] = False
+
+        test_mail(request, student)
+
+        return redirect('verify_student')
+
+    return render(request, 'confirm_student_id.html')
+
+
+
+def test_mail(request, student):
+    email = student.email
+
+    code = str(secrets.randbelow(900000) + 100000)
+
+    request.session['verification_code'] = make_password(code)
+
+    request.session['verification_expiry'] = (
+        timezone.now() + timedelta(minutes=5)
+    ).timestamp()
+
+    send_mail(
+        'Confirmation Of The Student',
+        f'Your Confirmation Code is {code}',
+        None,
+        [email],
+        fail_silently=False
+    )
+
+
+
+def verify_student(request):
+    if request.method == 'POST':
+        confirmation = request.POST.get('confirmation', '').strip()
+
+        saved_code = request.session.get('verification_code')
+        expiry = request.session.get('verification_expiry')
+
+        if not saved_code or not expiry:
+            messages.error(request, 'Request a new verification code.')
+            return redirect('confirm_student_id')
+
+        if timezone.now().timestamp() > expiry:
+            messages.error(request, 'Verification code has expired.')
+            return redirect('confirm_student_id')
+
+        if check_password(confirmation, saved_code):
+            request.session['verification_passed'] = True
+
+            del request.session['verification_code']
+            del request.session['verification_expiry']
+
+            return redirect('register_student')
+
+        messages.error(request, 'Incorrect verification code!')
+        return redirect('verify_student')
+
+    return render(request, 'verify_student.html')
+
+
+def register_student(request):
+    if not request.session.get('verification_passed'):
+        return redirect('confirm_student_id')
+    student_id=request.session.get('student_id')
+    student=Student.objects.filter(student_id=student_id).first()
+    if not student:
+        return redirect('confirm_student')
+
+    if StudentLogin.objects.filter(student=student).exists():
+        return redirect('confirm_student')
+
+    
+    if request.method=='POST':
+        password = request.POST.get('password')
+        confirm_password = request.POST.get('confirm_password')
+
+        if password != confirm_password:
+            messages.error(request, "Passwords don't match!")
+            return redirect('register_student')
+
+        user = User.objects.create_user(
+            username=student.student_id,
+            password=password,
+            email=student.email
+        )
+
+        StudentLogin.objects.create(
+            student=student,
+            user=user
+        )
+
+        messages.success(request, 'Account created successfully!')
+        return redirect('login')
+
+    return render(request, 'register_student.html')
+
+
+
 
 
 def new_student(request):
@@ -99,8 +221,17 @@ def new_student(request):
 
 
 
+def role(request):
+    return render(request, 'role.html')
 
-def login(request):
+
+def login_admin(request):
+    return render(request, 'login_admin.html')
+
+
+
+
+def login_teacher(request):
     if request.method == 'POST':
         username = request.POST.get('username')
         password = request.POST.get('password')
@@ -110,8 +241,15 @@ def login(request):
             return redirect('dashboard')
         else:
             messages.error(request, 'Invalid Credentials! ')
-            return redirect('login')
-    return render(request, 'login.html')
+            return redirect('login_teacher')
+    return render(request, 'login_teacher.html')
+
+
+
+
+
+
+
 
 def logout(request):
     auth.logout(request)

@@ -1,0 +1,43 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Select Role | Student Management System</title>
+
+    <link rel="stylesheet" href="{% static 'role.css' %}">
+</head>
+<body>
+
+    <div class="role-container">
+
+        <h1>Welcome Back</h1>
+        <p class="subtitle">Please select your account type to continue.</p>
+
+        <h2>Login as:</h2>
+
+        <div class="role-options">
+
+            <a href="{% url 'login_admin' %}" class="role-btn">
+                <span class="role-icon">🛡️</span>
+                <span>Admin</span>
+            </a>
+
+            <a href="{% url 'login_teacher' %}" class="role-btn">
+                <span class="role-icon">👨‍🏫</span>
+                <span>Teacher</span>
+            </a>
+
+            <a href="{% url 'confirm_student_id' %}" class="role-btn">
+                <span class="role-icon">🎓</span>
+                <span>Student</span>
+            </a>
+
+        </div>
+
+    </div>
+
+</body>
+</html>

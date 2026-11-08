@@ -30,6 +30,24 @@ class Student(models.Model):
         db_table = 'myapp_student'
 
 
+
+class StudentLogin(models.Model):
+    student=models.OneToOneField(
+        Student,
+        on_delete=models.CASCADE,
+        related_name='login'
+    )
+    user=models.OneToOneField(
+        User,
+        on_delete=models.CASCADE,
+        related_name='student_login'
+
+    )
+
+    class Meta:
+        db_table='myapp_studentLogin'
+
+
 class Student_attendance(models.Model):
     STATUS_CHOICES=[
         ('present', 'Present'),

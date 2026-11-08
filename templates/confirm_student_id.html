@@ -1,0 +1,16 @@
+{% load static %}
+<link rel="stylesheet" href="{% static 'confirm_student_id' %}">
+
+<div class="auth-container">
+    <h1>
+        Register Student
+    </h1>
+    <form action="{% url 'confirm_student_id' %}" method="POST">
+        {% csrf_token %}
+            <p>
+                Student ID:
+            </p>
+            <input type="text" name="student_id" placeholder="Enter Student ID" required>
+            <button type="submit">Continue</button>
+    </form>
+</div>

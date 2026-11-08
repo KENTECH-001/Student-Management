@@ -1,0 +1,52 @@
+
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>School Login</title>
+    <link rel="stylesheet" href="{% static 'login_student.css' %}">
+</head>
+<body>
+    <main class="login-page">
+        <section class="login-card">
+
+            <div>
+                <h1>School Login</h1>
+            </div>
+
+            <p class="subtitle">Login To The School Account As A Student:</p>
+
+            {% if messages %}
+                <div class="message-box">
+                    {% for message in messages %}
+                        <p>{{ message }}</p>
+                    {% endfor %}
+                </div>
+            {% endif %}
+
+            <form action="{% url 'login_student' %}" method="POST">
+                {% csrf_token %}
+
+                <div class="field-group">
+                    <label for="username">Student ID :</label>
+                    <input id="username" type="text" name="username"
+                           placeholder="Enter your username" required>
+                </div>
+
+                <div class="field-group">
+                    <label for="password">Password :</label>
+                    <input id="password" type="password" name="password"
+                           placeholder="Enter your password" required>
+                </div>
+                <button type="submit" class="submit-btn">Login</button>
+            </form>
+
+
+        </section>
+    </main>
+
+
+</body>
+</html>

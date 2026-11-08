@@ -1,0 +1,17 @@
+{% load static %}
+<link rel="stylesheet" href="{% static 'verify_student.css' %}">
+
+
+<div class="auth-container">
+    <h1>Email Verification</h1>
+    <p>Enter the code sent to your registered email.</p>
+
+    <form action="{% url 'verify_student' %}" method="POST">
+        {% csrf_token %}
+            <p>Enter The Code: </p>
+                <input type="text" name="confirmation" placeholder="XXXXXX" maxlength="6" pattern="[0-9]{6}" required>
+                <button type="submit">Verify Code</button>
+    </form>
+</div>
+
+
