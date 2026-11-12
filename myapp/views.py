@@ -22,6 +22,10 @@ from django.contrib.auth.hashers import make_password, check_password
 def index(request):
     return render(request, 'index.html')
 
+def role(request):
+    return render(request, 'role.html')
+
+
 def admin_registration(request):
     if request.method == 'POST':
         username = request.POST.get('username')
@@ -49,6 +53,21 @@ def admin_registration(request):
 
 def is_admin(user):
     return user.is_authenticated and user.is_superuser
+
+
+def login_admin(request):
+    if request.method == 'POST':
+        username=request.POST.get('username')
+        password=request.POST.get('passwrod')
+        user=auth.authenticate(username=username, password=password)
+        if user is not None:
+            auth.login(request, user)
+            return redirect('admin_dashboard')
+        else:
+            messages.error(request, 'Invalid Credentials')
+            return redirect('login_admin')
+    return render(request, 'login_admin.html')
+
 
 
 @login_required
@@ -170,10 +189,11 @@ def register_student(request):
     student_id=request.session.get('student_id')
     student=Student.objects.filter(student_id=student_id).first()
     if not student:
-        return redirect('confirm_student')
+        return redirect('confirm_student_id')
 
     if StudentLogin.objects.filter(student=student).exists():
-        return redirect('confirm_student')
+        messages.error(request, 'Account Already Exists!')
+        return redirect('confirm_student_id')
 
     
     if request.method=='POST':
@@ -196,11 +216,28 @@ def register_student(request):
         )
 
         messages.success(request, 'Account created successfully!')
-        return redirect('login')
+        return redirect('login_student')
 
     return render(request, 'register_student.html')
 
 
+def login_student(request):
+    if request.method=='POST':
+        username=request.POST.get('student_id')
+        password=request.POST.get('password')
+        user= auth.authenticate(username=username, password=password)
+
+        if user is None:
+            if hasattr(user, 'student_login'):
+                auth.login(request, user)
+                return redirect('student_dashboard')
+            messages.error(request, 'This Account Is Not a Student Account')
+            return redirect('login_student')
+
+        else:
+            messages.error(request, 'Invalid Credentials')
+            return redirect('login_student')
+    return render (request, 'login_student.html')
 
 
 
@@ -216,17 +253,13 @@ def new_student(request):
         student = Student(student_id = student_ID, firstName = student_firstName, surname = student_surname, middleName = student_middleName, email = student_email, studentClass = student_class, gender = student_gender )
         student.save()
         messages.success(request, 'You Have Successfully Added The Student')
-        return redirect('dashboard')
+        return redirect('admin_dashboard')
     return render(request, 'new_student.html')
 
 
 
-def role(request):
-    return render(request, 'role.html')
 
 
-def login_admin(request):
-    return render(request, 'login_admin.html')
 
 
 
@@ -238,12 +271,19 @@ def login_teacher(request):
         user = auth.authenticate(username=username, password=password)
         if user is not None:
             auth.login(request, user)
-            return redirect('dashboard')
+            return redirect('teacher_dashboard')
         else:
             messages.error(request, 'Invalid Credentials! ')
             return redirect('login_teacher')
     return render(request, 'login_teacher.html')
 
+
+def student_dashboard(request):
+    return render (request, 'student_dashboard.html')
+
+
+def teacher_dashboard(request):
+    return render (request, 'teacher_dashboard.html')
 
 
 
@@ -259,10 +299,10 @@ def logout(request):
 
 @never_cache
 @login_required(login_url='login')
-def dashboard(request):
+def admin_dashboard(request):
     students = Student.objects.all()
     teachers = Teacher.objects.all()
-    return render(request, 'dashboard.html', {'names': students, 'list':teachers})
+    return render(request, 'admin_dashboard.html', {'names': students, 'list':teachers})
 
 
 @login_required(login_url='login')
@@ -287,7 +327,7 @@ def update_student(request):
 
         data.save()
         messages.success(request, 'Student Updated Successfully!')
-        return redirect('dashboard')
+        return redirect('admin_dashboard')
         
 
     student_id = request.GET.get('id')
@@ -313,7 +353,7 @@ def delete_student(request):
         data = Student.objects.get(student_id=student_id)
         data.delete()
         messages.success(request, 'Student Deleted Successfully!')
-        return redirect('dashboard')
+        return redirect('admin_dashboard')
 
     student_id =  request.GET.get('id')
 
@@ -322,11 +362,6 @@ def delete_student(request):
         return render(request, 'delete_student.html', {'detail':data})
     return render(request, 'delete_student.html')
 
-
-# @login_required(login_url='login')
-# def all_student(request):
-    
-#     return render(request, 'all_student.html', {'all':all})
 
 
 @login_required(login_url='login')

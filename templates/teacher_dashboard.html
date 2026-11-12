@@ -1,0 +1,248 @@
+```html
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Teacher Dashboard</title>
+
+    <link rel="stylesheet" href="{% static 'css/teacher_dashboard.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+</head>
+
+<body>
+
+<div class="dashboard-container">
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+
+        <div class="logo">
+            <i class="fas fa-graduation-cap"></i>
+            <h2>Teacher Portal</h2>
+        </div>
+
+        <nav class="sidebar-nav">
+
+            <a href="#" class="active">
+                <i class="fas fa-house"></i>
+                <span>Dashboard</span>
+            </a>
+
+            <a href="#">
+                <i class="fas fa-users"></i>
+                <span>My Students</span>
+            </a>
+
+            <a href="#">
+                <i class="fas fa-calendar-check"></i>
+                <span>Attendance</span>
+            </a>
+
+            <a href="#">
+                <i class="fas fa-file-lines"></i>
+                <span>Manage Results</span>
+            </a>
+
+            <a href="#">
+                <i class="fas fa-calendar-days"></i>
+                <span>Timetable</span>
+            </a>
+
+            <a href="#">
+                <i class="fas fa-user"></i>
+                <span>My Profile</span>
+            </a>
+
+        </nav>
+
+        <div class="sidebar-bottom">
+            <a href="#">
+                <i class="fas fa-right-from-bracket"></i>
+                <span>Logout</span>
+            </a>
+        </div>
+
+    </aside>
+
+
+    <!-- MAIN CONTENT -->
+    <main class="main-content">
+
+        <!-- TOPBAR -->
+        <header class="topbar">
+
+            <div>
+                <h2>Dashboard</h2>
+                <p>Welcome to your teacher portal</p>
+            </div>
+
+            <div class="teacher-profile">
+                <div class="profile-icon">
+                    <i class="fas fa-user"></i>
+                </div>
+
+                <div>
+                    <h4>{{ request.user.username }}</h4>
+                    <span>Teacher</span>
+                </div>
+            </div>
+
+        </header>
+
+
+        <!-- WELCOME BANNER -->
+        <section class="welcome-banner">
+
+            <div>
+                <h1>Welcome Back, {{ teacher.name }}!</h1>
+
+                <p>
+                    Manage your students, monitor attendance
+                    and organize academic activities.
+                </p>
+            </div>
+
+            <div class="welcome-icon">
+                <i class="fas fa-chalkboard-teacher"></i>
+            </div>
+
+        </section>
+
+
+        <!-- SUMMARY CARDS -->
+        <section class="summary-cards">
+
+            <div class="summary-card">
+                <div class="summary-icon blue">
+                    <i class="fas fa-users"></i>
+                </div>
+
+                <div>
+                    <span>My Students</span>
+                    <h3>View Students</h3>
+                </div>
+            </div>
+
+
+            <div class="summary-card">
+                <div class="summary-icon green">
+                    <i class="fas fa-calendar-check"></i>
+                </div>
+
+                <div>
+                    <span>Attendance</span>
+                    <h3>Manage Attendance</h3>
+                </div>
+            </div>
+
+
+            <div class="summary-card">
+                <div class="summary-icon orange">
+                    <i class="fas fa-file-lines"></i>
+                </div>
+
+                <div>
+                    <span>Results</span>
+                    <h3>Manage Results</h3>
+                </div>
+            </div>
+
+
+            <div class="summary-card">
+                <div class="summary-icon purple">
+                    <i class="fas fa-calendar-days"></i>
+                </div>
+
+                <div>
+                    <span>Timetable</span>
+                    <h3>View Schedule</h3>
+                </div>
+            </div>
+
+        </section>
+
+
+        <!-- TEACHER INFORMATION -->
+        <section class="content-section">
+
+            <div class="section-heading">
+                <h2>My Information</h2>
+                <a href="#">View Profile</a>
+            </div>
+
+            <div class="information-grid">
+
+                <div class="information-item">
+                    <span>Teacher Name</span>
+                    <h4>{{ teacher.name }}</h4>
+                </div>
+
+                <div class="information-item">
+                    <span>Email Address</span>
+                    <h4>{{ teacher.email }}</h4>
+                </div>
+
+                <div class="information-item">
+                    <span>Username</span>
+                    <h4>{{ request.user.username }}</h4>
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- QUICK ACCESS -->
+        <section class="content-section">
+
+            <div class="section-heading">
+                <h2>Quick Access</h2>
+            </div>
+
+            <div class="quick-links">
+
+                <a href="#">
+                    <i class="fas fa-users"></i>
+                    <span>My Students</span>
+                    <i class="fas fa-arrow-right"></i>
+                </a>
+
+                <a href="#">
+                    <i class="fas fa-calendar-check"></i>
+                    <span>Record Attendance</span>
+                    <i class="fas fa-arrow-right"></i>
+                </a>
+
+                <a href="#">
+                    <i class="fas fa-file-lines"></i>
+                    <span>Manage Results</span>
+                    <i class="fas fa-arrow-right"></i>
+                </a>
+
+                <a href="#">
+                    <i class="fas fa-calendar-days"></i>
+                    <span>View Timetable</span>
+                    <i class="fas fa-arrow-right"></i>
+                </a>
+
+            </div>
+
+        </section>
+
+
+        <!-- FOOTER -->
+        <footer>
+            <p>&copy; 2026 Student Management System. All rights reserved.</p>
+        </footer>
+
+    </main>
+
+</div>
+
+</body>
+</html>
+```

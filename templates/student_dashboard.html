@@ -1,0 +1,169 @@
+
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Dashboard</title>
+
+    <link rel="stylesheet" href="{% static 'student_dashboard.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+</head>
+<body>
+
+    <div class="dashboard-container">
+
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="logo">
+                <h2>Student Portal</h2>
+            </div>
+
+            <nav>
+                <a href="#" class="active">
+                    <i class="fas fa-house"></i>
+                    Dashboard
+                </a>
+
+                <a href="#">
+                    <i class="fas fa-user"></i>
+                    My Profile
+                </a>
+
+                <a href="#">
+                    <i class="fas fa-calendar-check"></i>
+                    Attendance
+                </a>
+
+                <a href="#">
+                    <i class="fas fa-graduation-cap"></i>
+                    My Results
+                </a>
+
+                <a href="#">
+                    <i class="fas fa-calendar-days"></i>
+                    Timetable
+                </a>
+
+                <a href="#">
+                    <i class="fas fa-sign-out-alt"></i>
+                    Logout
+                </a>
+            </nav>
+        </aside>
+
+
+        <!-- Main Content -->
+        <main class="main-content">
+
+            <!-- Top Navigation -->
+            <header class="topbar">
+                <div>
+                    <h2>Dashboard</h2>
+                    <p>Welcome to your student portal</p>
+                </div>
+
+                <div class="student-info">
+                    <i class="fas fa-user-circle"></i>
+                    <span>Student</span>
+                </div>
+            </header>
+
+
+            <!-- Welcome Section -->
+            <section class="welcome-section">
+                <h1>Welcome Back!</h1>
+                <p>Manage your academic activities from your dashboard.</p>
+            </section>
+
+
+            <!-- Dashboard Cards -->
+            <section class="dashboard-cards">
+
+                <div class="card">
+                    <div class="card-icon blue">
+                        <i class="fas fa-user"></i>
+                    </div>
+                    <div>
+                        <h3>My Profile</h3>
+                        <p>View your personal information</p>
+                        <a href="#">View Profile</a>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-icon green">
+                        <i class="fas fa-calendar-check"></i>
+                    </div>
+                    <div>
+                        <h3>Attendance</h3>
+                        <p>Check your attendance records</p>
+                        <a href="#">View Attendance</a>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-icon orange">
+                        <i class="fas fa-graduation-cap"></i>
+                    </div>
+                    <div>
+                        <h3>My Results</h3>
+                        <p>View your academic performance</p>
+                        <a href="#">View Results</a>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-icon purple">
+                        <i class="fas fa-calendar-days"></i>
+                    </div>
+                    <div>
+                        <h3>Timetable</h3>
+                        <p>Check your class timetable</p>
+                        <a href="#">View Timetable</a>
+                    </div>
+                </div>
+
+            </section>
+
+
+            <!-- Student Details -->
+            <section class="student-details">
+                <h2>Student Information</h2>
+
+                <div class="details-grid">
+                    <div>
+                        <span>Student ID</span>
+                        <p>STU001</p>
+                    </div>
+
+                    <div>
+                        <span>Student Name</span>
+                        <p>Student Name</p>
+                    </div>
+
+                    <div>
+                        <span>Class</span>
+                        <p>100L</p>
+                    </div>
+
+                    <div>
+                        <span>Email Address</span>
+                        <p>student@example.com</p>
+                    </div>
+                </div>
+            </section>
+
+            <footer>
+                <p>&copy; 2026 Student Management System. All rights reserved.</p>
+            </footer>
+
+        </main>
+
+    </div>
+
+</body>
+</html>
+```

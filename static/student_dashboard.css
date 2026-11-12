@@ -1,0 +1,287 @@
+```css
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background: #f4f6fb;
+    color: #333;
+}
+
+.dashboard-container {
+    display: flex;
+    min-height: 100vh;
+}
+
+/* Sidebar */
+
+.sidebar {
+    width: 250px;
+    background: #17164f;
+    color: white;
+    padding: 25px 15px;
+    flex-shrink: 0;
+}
+
+.logo {
+    text-align: center;
+    padding-bottom: 35px;
+}
+
+.logo h2 {
+    font-size: 22px;
+}
+
+.sidebar nav {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.sidebar nav a {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    color: #ddd;
+    text-decoration: none;
+    padding: 14px 15px;
+    border-radius: 8px;
+    transition: 0.3s;
+}
+
+.sidebar nav a:hover,
+.sidebar nav a.active {
+    background: #302f79;
+    color: white;
+}
+
+.sidebar nav a i {
+    width: 20px;
+}
+
+/* Main Content */
+
+.main-content {
+    flex: 1;
+    padding: 25px 35px;
+    min-width: 0;
+}
+
+/* Topbar */
+
+.topbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+}
+
+.topbar h2 {
+    color: #17164f;
+    margin-bottom: 5px;
+}
+
+.topbar p {
+    color: #777;
+    font-size: 14px;
+}
+
+.student-info {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: #17164f;
+    font-weight: bold;
+}
+
+.student-info i {
+    font-size: 30px;
+}
+
+/* Welcome Section */
+
+.welcome-section {
+    background: #17164f;
+    color: white;
+    padding: 30px;
+    border-radius: 12px;
+    margin-bottom: 30px;
+}
+
+.welcome-section h1 {
+    margin-bottom: 10px;
+}
+
+.welcome-section p {
+    color: #ddd;
+}
+
+/* Dashboard Cards */
+
+.dashboard-cards {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 20px;
+    margin-bottom: 30px;
+}
+
+.card {
+    background: white;
+    padding: 22px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    box-shadow: 0 3px 12px rgba(0, 0, 0, 0.05);
+}
+
+.card-icon {
+    min-width: 55px;
+    height: 55px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 22px;
+}
+
+.blue {
+    background: #e4eaff;
+    color: #3156c9;
+}
+
+.green {
+    background: #e0f7e9;
+    color: #239b56;
+}
+
+.orange {
+    background: #fff0dc;
+    color: #e28a20;
+}
+
+.purple {
+    background: #eee5ff;
+    color: #8050c9;
+}
+
+.card h3 {
+    color: #17164f;
+    margin-bottom: 7px;
+}
+
+.card p {
+    color: #777;
+    font-size: 13px;
+    margin-bottom: 12px;
+}
+
+.card a {
+    color: #17164f;
+    text-decoration: none;
+    font-size: 13px;
+    font-weight: bold;
+}
+
+.card a:hover {
+    text-decoration: underline;
+}
+
+/* Student Details */
+
+.student-details {
+    background: white;
+    padding: 25px;
+    border-radius: 12px;
+    box-shadow: 0 3px 12px rgba(0, 0, 0, 0.05);
+}
+
+.student-details h2 {
+    color: #17164f;
+    margin-bottom: 25px;
+}
+
+.details-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 25px;
+}
+
+.details-grid span {
+    color: #888;
+    font-size: 13px;
+}
+
+.details-grid p {
+    margin-top: 7px;
+    font-weight: bold;
+    color: #333;
+    overflow-wrap: anywhere;
+}
+
+/* Footer */
+
+footer {
+    text-align: center;
+    padding: 25px 0 5px;
+    color: #888;
+    font-size: 13px;
+}
+
+/* Responsive Design */
+
+@media (max-width: 850px) {
+    .sidebar {
+        width: 210px;
+    }
+
+    .main-content {
+        padding: 20px;
+    }
+}
+
+@media (max-width: 650px) {
+    .dashboard-container {
+        flex-direction: column;
+    }
+
+    .sidebar {
+        width: 100%;
+        padding: 15px;
+    }
+
+    .logo {
+        padding-bottom: 15px;
+    }
+
+    .sidebar nav {
+        flex-direction: row;
+        overflow-x: auto;
+        padding-bottom: 5px;
+    }
+
+    .sidebar nav a {
+        white-space: nowrap;
+        font-size: 13px;
+    }
+
+    .main-content {
+        padding: 18px;
+    }
+
+    .dashboard-cards {
+        grid-template-columns: 1fr;
+    }
+
+    .details-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .topbar {
+        gap: 15px;
+    }
+}
+```
