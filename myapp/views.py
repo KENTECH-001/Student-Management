@@ -48,7 +48,7 @@ def admin_registration(request):
         messages.success(request, 'Admin account created successfully!')
         return redirect('login')
 
-    return render(request, 'admin_registration.html')
+    return render(request, 'register_admin.html')
 
 
 def is_admin(user):
@@ -101,7 +101,7 @@ def register_teacher(request):
                 user=user
                 )
                 messages.success(request, 'Teacher Successfully Registered!')
-                return redirect('login')
+                return redirect('login_teacher')
             
     return render(request, 'register_teacher.html')
 
