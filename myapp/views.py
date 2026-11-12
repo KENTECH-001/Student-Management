@@ -46,7 +46,7 @@ def admin_registration(request):
         )
 
         messages.success(request, 'Admin account created successfully!')
-        return redirect('login')
+        return redirect('login_admin')
 
     return render(request, 'register_admin.html')
 
