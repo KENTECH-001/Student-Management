@@ -57,17 +57,19 @@ def is_admin(user):
 
 def login_admin(request):
     if request.method == 'POST':
-        username=request.POST.get('username')
-        password=request.POST.get('passwrod')
-        user=auth.authenticate(username=username, password=password)
-        if user is not None:
+        username = request.POST.get('username')
+        password = request.POST.get('password')
+        user = auth.authenticate(
+            username=username,
+            password=password
+        )
+        if user is not None and user.is_superuser:
             auth.login(request, user)
             return redirect('admin_dashboard')
-        else:
-            messages.error(request, 'Invalid Credentials')
-            return redirect('login_admin')
-    return render(request, 'login_admin.html')
+        messages.error(request, 'Invalid Credentials')
+        return redirect('login_admin')
 
+    return render(request, 'login_admin.html')
 
 
 @login_required
