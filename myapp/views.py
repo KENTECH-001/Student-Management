@@ -34,7 +34,7 @@ def admin_registration(request):
 
         if User.objects.filter(is_superuser=True).exists():
             messages.error(request, 'The Admin is already created. Login instead.')
-            return redirect('login')
+            return redirect('login_admin')
 
         if password != confirm_password:
             messages.error(request, 'Passwords do not match!')
