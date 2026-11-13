@@ -26,7 +26,7 @@ def role(request):
     return render(request, 'role.html')
 
 
-def admin_registration(request):
+def register_admin(request):
     if request.method == 'POST':
         username = request.POST.get('username')
         password = request.POST.get('password')
@@ -38,7 +38,7 @@ def admin_registration(request):
 
         if password != confirm_password:
             messages.error(request, 'Passwords do not match!')
-            return redirect('admin_registration')
+            return redirect('register_admin')
 
         user = User.objects.create_superuser(
             username=username,
