@@ -74,4 +74,46 @@ class Student_attendance(models.Model):
 
     def __str__(self):
         return f"{self.student} - {self.date} - {self.status}"
+
+
+class Junior_subjects(models.Model):
+    mathematics=models.IntegerField(blank=False)
+    English=models.IntegerField(blank=False)
+    Basic_Science=models.IntegerField(blank=False)
+    Pre_Vocation=models.IntegerField(blank=False)
+    Yoruba=models.IntegerField(blank=False)
+    Digital_Litiracy=models.IntegerField(blank=False)
+    History=models.IntegerField(blank=False)
+    National_values=models.IntegerField(blank=False)
+    Reiigious_studies=models.IntegerField(blank=False)
+    Business_studies=models.IntegerField(blank=False)
+    Creative_arts=models.IntegerField(blank=False)
+
+    class Meta:
+        db_table = 'junior_subjects'
+
+
+class Senior_subjects(models.Model):
+    mathematics=models.IntegerField(blank=False)
+    english=models.IntegerField(blank=False)
+    physics=models.IntegerField(blank=False)
+    chemistry=models.IntegerField(blank=False)
+    biology=models.IntegerField(blank=False)
+    agric_science=models.IntegerField(blank=False)
+    civic_education=models.IntegerField(blank=False)
+    economics=models.IntegerField(blank=False)
+    marketing=models.IntegerField(blank=False)
+    commerce=models.IntegerField(blank=False)
+    accounting=models.IntegerField(blank=False)
+    literature=models.IntegerField(blank=False)
+    government=models.IntegerField(blank=False)
+    data_processing=models.IntegerField(blank=False)
+    yoruba=models.IntegerField(blank=False)
+
+    class Meta:
+        db_table='senior_subjects'
+
+
+
+
     
