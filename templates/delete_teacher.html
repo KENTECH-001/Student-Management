@@ -1,0 +1,57 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Delete Teacher</title>
+    <link rel="stylesheet" href="{% static 'delete_teacher.css' %}">
+</head>
+<body>
+
+    <div class="delete-container">
+        <h1>Delete Teacher</h1>
+
+        {% for message in messages %}
+            <div class="message">{{ message }}</div>
+        {% endfor %}
+
+        {% if detail %}
+            <p class="warning">
+                Are you sure you want to delete this teacher?
+            </p>
+
+            <div class="teacher-details">
+                <p><strong>Full Name:</strong> {{ detail.user.first_name }}</p>
+                <p><strong>Username:</strong> {{ detail.user.username }}</p>
+                <p><strong>Email:</strong> {{ detail.user.email }}</p>
+                <p><strong>Gender:</strong> {{ detail.gender }}</p>
+                <p><strong>Assigned Class:</strong> {{ detail.assigned_class }}</p>
+            </div>
+
+            <form action="{% url 'delete_teacher' %}" method="POST">
+                {% csrf_token %}
+                <input type="hidden" name="username" value="{{ detail.user.username }}">
+
+                <button type="submit" class="delete-button">
+                    Confirm Delete
+                </button>
+            </form>
+
+            <a class="cancel-link" href="{% url 'admin_dashboard' %}">
+                Cancel
+            </a>
+
+        {% else %}
+            <p class="no-teacher">
+                No teacher has been selected for deletion.
+            </p>
+
+            <a class="cancel-link" href="{% url 'admin_dashboard' %}">
+                Back to Dashboard
+            </a>
+        {% endif %}
+    </div>
+
+</body>
+</html>

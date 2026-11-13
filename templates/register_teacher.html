@@ -1,31 +1,100 @@
 {% load static %}
-<link rel="stylesheet" href="{% static 'register_teacher.css' %}">
-<h1>
-    Register A New Teacher
-</h1>
-{% for message in messages %}
-<h2>
-    {{message}}
-</h2>
-{% endfor %}
 
-<form action="register_teacher" method="POST">
-    {% csrf_token %}
-    <p>
-        Username
-    </p>
-    <input type="text" name="username" id="username" placeholder="Enter Your Username" required>
-    <p>
-        Email
-    </p>
-    <input type="email" name="email" id="email" placeholder="Enter Your Email" required>
-    <p>
-        Password
-    </p>
-    <input type="password" name="password" placeholder="Enter Your Password" required>
-    <p>
-        Confirm Password
-    </p>
-    <input type="password" name="confirm_password" placeholder="Enter Your Password Again" required><br>
-    <button type="submit">Register</button>
-</form>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register Teacher | EduManage</title>
+    <link rel="stylesheet" href="{% static 'register_teacher.css' %}">
+</head>
+
+<body>
+
+    <div class="register-container">
+
+        <h1>Register A New Teacher</h1>
+
+        {% for message in messages %}
+            <div class="message">
+                {{ message }}
+            </div>
+        {% endfor %}
+
+        <form action="{% url 'register_teacher' %}" method="POST">
+            {% csrf_token %}
+
+            <div class="form-group">
+                <label for="fullname">Full Name</label>
+                <input
+                    type="text"
+                    name="fullname"
+                    id="fullname"
+                    placeholder="Enter Your Full Name"
+                    required
+                >
+            </div>
+
+            <div class="form-group">
+                <label for="username">Username</label>
+                <input
+                    type="text"
+                    name="username"
+                    id="username"
+                    placeholder="Enter Your Username"
+                    required
+                >
+            </div>
+
+            <div class="form-group">
+                <label for="email">Email</label>
+                <input
+                    type="email"
+                    name="email"
+                    id="email"
+                    placeholder="Enter Your Email"
+                    required
+                >
+            </div>
+
+            <div class="form-group">
+                <label for="assigned_class">Assigned Class</label>
+                <input
+                    type="text"
+                    name="assigned_class"
+                    id="assigned_class"
+                    placeholder="Enter The Class Assigned To This Teacher"
+                    required
+                >
+            </div>
+
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input
+                    type="password"
+                    name="password"
+                    id="password"
+                    placeholder="Enter Your Password"
+                    required
+                >
+            </div>
+
+            <div class="form-group">
+                <label for="confirm_password">Confirm Password</label>
+                <input
+                    type="password"
+                    name="confirm_password"
+                    id="confirm_password"
+                    placeholder="Enter Your Password Again"
+                    required
+                >
+            </div>
+
+            <button type="submit">Register Teacher</button>
+
+        </form>
+
+    </div>
+
+</body>
+</html>

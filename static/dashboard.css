@@ -1,4 +1,4 @@
-
+```css
 /* General Reset */
 * {
     margin: 0;
@@ -88,6 +88,7 @@ a {
     align-items: center;
     justify-content: center;
     font-weight: bold;
+    flex-shrink: 0;
 }
 
 .sidebar-bottom strong,
@@ -102,6 +103,25 @@ a {
 .sidebar-bottom small {
     color: #b7b8d0;
     margin-top: 5px;
+}
+
+/* Logout Button */
+.sidebar-bottom form {
+    margin-top: 8px;
+}
+
+.sidebar-bottom button {
+    background: none;
+    border: none;
+    color: #c4c5dc;
+    font-size: 12px;
+    cursor: pointer;
+    padding: 0;
+}
+
+.sidebar-bottom button:hover {
+    color: white;
+    text-decoration: underline;
 }
 
 /* Main Content */
@@ -243,9 +263,13 @@ a {
 }
 
 .search-row {
+    margin-bottom: 22px;
+}
+
+.search-row form {
     display: flex;
     gap: 10px;
-    margin-bottom: 22px;
+    width: 100%;
 }
 
 .search-row input {
@@ -412,6 +436,11 @@ footer {
     padding: 25px 0 5px;
 }
 
+/* Messages */
+h3 {
+    color: red;
+}
+
 /* Responsive Design */
 @media (max-width: 1100px) {
     .stats {
@@ -455,6 +484,10 @@ footer {
         flex-shrink: 0;
     }
 
+    .sidebar-bottom form {
+        display: none;
+    }
+
     .main-content {
         padding: 18px 12px;
     }
@@ -494,7 +527,4 @@ footer {
         flex-direction: column;
     }
 }
-h3{
-    color: red;
-}
-
+```

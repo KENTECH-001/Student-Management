@@ -1,6 +1,7 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.models import User
-from django.shortcuts import redirect, render
+from django.contrib import messages, auth
+from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib import messages, auth
 from django.contrib.auth.decorators import login_required, user_passes_test
 from .models import Student, Teacher, Student_attendance, StudentLogin
@@ -29,6 +30,8 @@ def role(request):
 def register_admin(request):
     if request.method == 'POST':
         username = request.POST.get('username')
+        full_name=request.POST.get('fullname')
+        email=request.POST.get('email')
         password = request.POST.get('password')
         confirm_password = request.POST.get('confirm_password')
 
@@ -42,17 +45,27 @@ def register_admin(request):
 
         user = User.objects.create_superuser(
             username=username,
+            first_name=full_name,
+            email=email,
             password=password
         )
-
         messages.success(request, 'Admin account created successfully!')
         return redirect('login_admin')
 
     return render(request, 'register_admin.html')
 
 
+
 def is_admin(user):
     return user.is_authenticated and user.is_superuser
+
+
+def admin_required(view_func):
+    return user_passes_test(
+        is_admin,
+        login_url='login_admin'
+    )(view_func)
+
 
 
 def login_admin(request):
@@ -72,40 +85,128 @@ def login_admin(request):
     return render(request, 'login_admin.html')
 
 
-@login_required
+
+@admin_required
 @user_passes_test(is_admin)
 def register_teacher(request):
     if request.method == 'POST':
+        fullname = request.POST.get('fullname')
         username = request.POST.get('username')
         email = request.POST.get('email')
+        assigned_class = request.POST.get('assigned_class')
+        gender = request.POST.get('gender')
         password = request.POST.get('password')
         confirm_password = request.POST.get('confirm_password')
 
         if password != confirm_password:
-            messages.error(request, 'The Password Does Not Match!')
+            messages.error(request, 'The passwords do not match!')
             return redirect('register_teacher')
 
         if User.objects.filter(username=username).exists():
-            messages.error(request, 'Username Already Exists!')
+            messages.error(request, 'Username already exists!')
             return redirect('register_teacher')
 
         if User.objects.filter(email=email).exists():
-            messages.error(request, 'Email Already Exists!')
+            messages.error(request, 'Email already exists!')
             return redirect('register_teacher')
-        else:
-            with transaction.atomic():
-                user = User.objects.create_user(
+
+        with transaction.atomic():
+            user = User.objects.create_user(
                 username=username,
+                first_name=fullname,
                 email=email,
                 password=password
-                )
-                Teacher.objects.create(
-                user=user
-                )
-                messages.success(request, 'Teacher Successfully Registered!')
-                return redirect('admin_dashboard')
-            
+            )
+
+            Teacher.objects.create(
+                user=user,
+                assigned_class=assigned_class,
+                gender=gender
+            )
+
+        messages.success(request, 'Teacher successfully registered!')
+        return redirect('admin_dashboard')
+
     return render(request, 'register_teacher.html')
+
+
+
+@admin_required
+def update_teacher(request):
+    if request.method == 'POST':
+        username = request.POST.get('username')
+
+        teacher = get_object_or_404(
+            Teacher,
+            user__username=username
+        )
+
+        teacher.user.first_name = request.POST.get('fullname')
+        teacher.user.email = request.POST.get('email')
+        teacher.gender = request.POST.get('gender')
+        teacher.assigned_class = request.POST.get('assigned_class')
+
+        teacher.user.save()
+        teacher.save()
+
+        messages.success(
+            request,
+            'Teacher record updated successfully!'
+        )
+        return redirect('admin_dashboard')
+
+    username = request.GET.get('username')
+
+    if username:
+        teacher = get_object_or_404(
+            Teacher,
+            user__username=username
+        )
+
+        return render(
+            request,
+            'update_teacher.html',
+            {'details': teacher}
+        )
+
+    return redirect('admin_dashboard')
+
+
+@admin_required
+@user_passes_test(is_admin)
+def delete_teacher(request):
+    if request.method == 'POST':
+        username = request.POST.get('username')
+
+        teacher = get_object_or_404(
+            Teacher,
+            user__username=username
+        )
+
+        teacher.user.delete()
+
+        messages.success(
+            request,
+            'Teacher deleted successfully!'
+        )
+        return redirect('admin_dashboard')
+
+    username = request.GET.get('username')
+
+    if username:
+        teacher = get_object_or_404(
+            Teacher,
+            user__username=username
+        )
+
+        return render(
+            request,
+            'delete_teacher.html',
+            {'detail': teacher}
+        )
+
+    return render(request, 'delete_teacher.html')
+
 
 
 def confirm_student_id(request):
@@ -188,17 +289,22 @@ def verify_student(request):
 def register_student(request):
     if not request.session.get('verification_passed'):
         return redirect('confirm_student_id')
-    student_id=request.session.get('student_id')
-    student=Student.objects.filter(student_id=student_id).first()
+
+    student_id = request.session.get('student_id')
+    student = Student.objects.filter(student_id=student_id).first()
+
     if not student:
         return redirect('confirm_student_id')
 
     if StudentLogin.objects.filter(student=student).exists():
-        messages.error(request, 'Account Already Exists!')
+        messages.error(request, 'Account already exists!')
         return redirect('confirm_student_id')
 
-    
-    if request.method=='POST':
+    if User.objects.filter(username=student.student_id).exists():
+        messages.error(request, 'An account with this Student ID already exists.')
+        return redirect('confirm_student_id')
+
+    if request.method == 'POST':
         password = request.POST.get('password')
         confirm_password = request.POST.get('confirm_password')
 
@@ -206,16 +312,20 @@ def register_student(request):
             messages.error(request, "Passwords don't match!")
             return redirect('register_student')
 
-        user = User.objects.create_user(
-            username=student.student_id,
-            password=password,
-            email=student.email
-        )
+        with transaction.atomic():
+            user = User.objects.create_user(
+                username=student.student_id,
+                password=password,
+                email=student.email
+            )
 
-        StudentLogin.objects.create(
-            student=student,
-            user=user
-        )
+            StudentLogin.objects.create(
+                student=student,
+                user=user
+            )
+
+        request.session.pop('student_id', None)
+        request.session.pop('verification_passed', None)
 
         messages.success(request, 'Account created successfully!')
         return redirect('login_student')
@@ -223,102 +333,154 @@ def register_student(request):
     return render(request, 'register_student.html')
 
 
-def login_student(request):
-    if request.method=='POST':
-        username=request.POST.get('student_id')
-        password=request.POST.get('password')
-        user= auth.authenticate(username=username, password=password)
 
-        if user is None:
+def login_student(request):
+    if request.method == 'POST':
+        username = request.POST.get('student_id')
+        password = request.POST.get('password')
+
+        user = auth.authenticate(
+            username=username,
+            password=password
+        )
+
+        if user is not None:
             if hasattr(user, 'student_login'):
                 auth.login(request, user)
                 return redirect('student_dashboard')
-            messages.error(request, 'This Account Is Not a Student Account')
+
+            messages.error(
+                request,
+                'This account is not a student account!'
+            )
             return redirect('login_student')
 
-        else:
-            messages.error(request, 'Invalid Credentials')
-            return redirect('login_student')
-    return render (request, 'login_student.html')
+        messages.error(request, 'Invalid Credentials')
+        return redirect('login_student')
+    return render(request, 'login_student.html')
 
 
-
+@admin_required
+@user_passes_test(is_admin)
 def new_student(request):
     if request.method == 'POST':
         student_ID = request.POST.get('student_ID')
-        student_firstName = request.POST.get('student_firstName')
-        student_surname = request.POST.get('student_surname')
-        student_middleName = request.POST.get('student_middleName')
-        student_email = request.POST.get('student_email')
-        student_class = request.POST.get('student_class')
-        student_gender = request.POST.get('student_gender')
-        student = Student(student_id = student_ID, firstName = student_firstName, surname = student_surname, middleName = student_middleName, email = student_email, studentClass = student_class, gender = student_gender )
+
+        if Student.objects.filter(student_id=student_ID).exists():
+            messages.error(request, 'Student ID already exists!')
+            return redirect('new_student')
+
+        student = Student(
+            student_id=student_ID,
+            firstName=request.POST.get('student_firstName'),
+            surname=request.POST.get('student_surname'),
+            middleName=request.POST.get('student_middleName'),
+            email=request.POST.get('student_email'),
+            studentClass=request.POST.get('student_class'),
+            gender=request.POST.get('student_gender')
+        )
+
         student.save()
-        messages.success(request, 'You Have Successfully Added The Student')
+
+        messages.success(
+            request,
+            'You have successfully added the student!'
+        )
         return redirect('admin_dashboard')
+
     return render(request, 'new_student.html')
-
-
-
-
-
-
-
 
 
 def login_teacher(request):
     if request.method == 'POST':
         username = request.POST.get('username')
         password = request.POST.get('password')
-        user = auth.authenticate(username=username, password=password)
+
+        user = auth.authenticate(
+            username=username,
+            password=password
+        )
+
         if user is not None:
-            auth.login(request, user)
-            return redirect('teacher_dashboard')
-        else:
-            messages.error(request, 'Invalid Credentials! ')
+            if hasattr(user, 'teacher'):
+                auth.login(request, user)
+                return redirect('teacher_dashboard')
+
+            messages.error(
+                request,
+                'This account is not a teacher account!'
+            )
             return redirect('login_teacher')
+
+        messages.error(request, 'Invalid credentials!')
+        return redirect('login_teacher')
+
     return render(request, 'login_teacher.html')
 
 
+
+@login_required(login_url='login_student')
 def student_dashboard(request):
-    return render (request, 'student_dashboard.html')
+    if not hasattr(request.user, 'student_login'):
+        return redirect('role')
+
+    student = request.user.student_login.student
+
+    return render(
+        request,
+        'student_dashboard.html',
+        {'student': student}
+    )
 
 
+
+@login_required(login_url='login_teacher')
 def teacher_dashboard(request):
-    return render (request, 'teacher_dashboard.html')
+    if not hasattr(request.user, 'teacher'):
+        return redirect('role')
 
+    teacher = request.user.teacher
 
-
+    return render(
+        request,
+        'teacher_dashboard.html',
+        {'teacher': teacher}
+    )
 
 
 
 
 def logout(request):
     auth.logout(request)
-    messages.success(request, 'You Have Successfully Logged Out!')
-    return render(request, 'index.html')
+    messages.success(request, 'You have successfully logged out!')
+    return redirect('index')
+
 
 
 @never_cache
-@login_required(login_url='login')
+@admin_required
 def admin_dashboard(request):
     students = Student.objects.all()
     teachers = Teacher.objects.all()
-    return render(request, 'admin_dashboard.html', {'names': students, 'list':teachers})
 
+    return render(
+        request,
+        'admin_dashboard.html',
+        {'names': students, 'list': teachers}
+    )
 
-@login_required(login_url='login')
+@admin_required
 def student_details(request):
     search = request.GET.get('search')
     search_data = Student.objects.filter(student_id=search)
     return render(request, 'student_details.html', {'details': search_data})
 
 
-@login_required(login_url='login')
+@admin_required
 def update_student(request):
     if request.method == 'POST':
         student_id = request.POST.get('id')
-        data = Student.objects.get(student_id=student_id)
+        data = get_object_or_404(Student, student_id=student_id)
 
         data.firstName = request.POST.get('firstname')
         data.surname = request.POST.get('surname')
@@ -337,7 +499,7 @@ def update_student(request):
 
     if student_id:
         if Student.objects.filter(student_id=student_id).exists():
-            data = Student.objects.get(student_id=student_id)
+            data = get_object_or_404(Student, student_id=student_id)
             return render(request, 'update_student.html', {'details': data})
 
         else:
@@ -348,11 +510,11 @@ def update_student(request):
 
 
 
-@login_required(login_url='login')
+@admin_required
 def delete_student(request):
     if request.method =='POST':
         student_id = request.POST.get('id')
-        data = Student.objects.get(student_id=student_id)
+        data = get_object_or_404(Student, student_id=student_id)
         data.delete()
         messages.success(request, 'Student Deleted Successfully!')
         return redirect('admin_dashboard')
@@ -360,61 +522,61 @@ def delete_student(request):
     student_id =  request.GET.get('id')
 
     if student_id:
-        data = Student.objects.filter(student_id=student_id).first
+        data = Student.objects.filter(student_id=student_id).first()
         return render(request, 'delete_student.html', {'detail':data})
     return render(request, 'delete_student.html')
 
 
 
-@login_required(login_url='login')
+@admin_required
 def student_class(request):
     return render(request, 'student_class.html')
 
 
 
-@login_required(login_url='login')
+@admin_required
 def SS1(request):
     tb1 = Student.objects.filter(studentClass='SS1').values()
     return render(request, 'SS1.html', {'tb1':tb1})
 
 
-@login_required(login_url='login')
+@admin_required
 def SS2(request):
     tb2 = Student.objects.filter(studentClass='SS2').values()
     return render(request, 'SS2.html', {'tb2':tb2})
 
 
-@login_required(login_url='login')
+@admin_required
 def SS3(request):
     tb3 = Student.objects.filter(studentClass='SS3').values()
     return render(request, 'SS3.html', {'tb3':tb3})
 
 
-@login_required(login_url='login')
+@admin_required
 def JSS1(request):
     tb4 = Student.objects.filter(studentClass='JSS1').values()
     return render(request, 'JSS1.html', {'tb4':tb4})
 
 
-@login_required(login_url='login')
+@admin_required
 def JSS2(request):
     tb5 = Student.objects.filter(studentClass='JSS2').values()
     return render(request, 'JSS2.html', {'tb5':tb5})
 
 
-@login_required(login_url='login')
+@admin_required
 def JSS3(request):
     tb6 = Student.objects.filter(studentClass='JSS3').values()
     return render(request, 'JSS3.html', {'tb6':tb6})
 
 
-@login_required(login_url='login')
+@admin_required
 def list_students(request):
     names = Student.objects.all().values()
     return render (request, 'list_students.html', {'names':names})
 
 
-@login_required(login_url='login')
+@admin_required
 def count(request):
     count1=Student.objects.filter(studentClass='JSS1').count()
     count2=Student.objects.filter(studentClass='JSS2').count()
@@ -425,7 +587,7 @@ def count(request):
     return render(request, 'count.html', {'count1': count1, 'count2': count2, 'count3': count3, 'count4': count4, 'count5': count5, 'count6': count6})
 
 
-@login_required(login_url='login')
+@admin_required
 def attendance(request):
     data= Student.objects.all().values()
     data2= Student_attendance.objects.all().values()

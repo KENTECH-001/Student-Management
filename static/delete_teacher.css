@@ -1,0 +1,96 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background: #f5f3ff;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 25px;
+}
+
+.delete-container {
+    background: #fff;
+    width: 100%;
+    max-width: 500px;
+    padding: 35px;
+    border-radius: 12px;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+}
+
+h1 {
+    color: #5b21b6;
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.warning {
+    color: #b45309;
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.teacher-details {
+    background: #f5f3ff;
+    padding: 20px;
+    border-radius: 8px;
+    margin-bottom: 25px;
+}
+
+.teacher-details p {
+    margin-bottom: 12px;
+    color: #444;
+    overflow-wrap: anywhere;
+}
+
+.teacher-details p:last-child {
+    margin-bottom: 0;
+}
+
+.delete-button {
+    width: 100%;
+    padding: 13px;
+    background: #dc2626;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+.delete-button:hover {
+    background: #b91c1c;
+}
+
+.cancel-link {
+    display: block;
+    text-align: center;
+    margin-top: 18px;
+    color: #6d28d9;
+    text-decoration: none;
+}
+
+.no-teacher {
+    color: #666;
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.message {
+    padding: 10px;
+    margin-bottom: 15px;
+    background: #f0eaff;
+    color: #5b21b6;
+    border-radius: 5px;
+}
+
+@media (max-width: 500px) {
+    .delete-container {
+        padding: 25px 20px;
+    }
+}

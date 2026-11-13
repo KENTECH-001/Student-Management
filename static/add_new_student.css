@@ -1,5 +1,9 @@
+```css
+/* General page layout */
+* {
+    box-sizing: border-box;
+}
 
-/* Page layout */
 body {
     margin: 0;
     padding: 35px 20px;
@@ -8,35 +12,45 @@ body {
     color: #25243a;
 }
 
-/* Page heading */
-h1 {
-    text-align: center;
-    color: #29234f;
-    font-size: 27px;
-    margin-bottom: 25px;
-}
-
-/* Form card */
-form {
+/* Form container */
+.form-container {
     max-width: 520px;
     margin: 0 auto;
     padding: 30px;
     background-color: #ffffff;
     border-radius: 12px;
     box-shadow: 0 4px 18px rgba(35, 30, 75, 0.08);
-    box-sizing: border-box;
 }
 
-/* Field labels */
-form p {
-    margin: 15px 0 8px;
+/* Page heading */
+h1 {
+    text-align: center;
+    color: #29234f;
+    font-size: 27px;
+    margin-bottom: 10px;
+}
+
+.subtitle {
+    text-align: center;
+    color: #88849e;
+    font-size: 14px;
+    margin-bottom: 25px;
+}
+
+/* Form fields */
+.form-group {
+    margin-bottom: 18px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 8px;
     color: #34324a;
     font-size: 14px;
     font-weight: 600;
 }
 
-/* Input fields */
-form input {
+.form-group input {
     display: block;
     width: 100%;
     padding: 12px 14px;
@@ -45,25 +59,24 @@ form input {
     background-color: #fafaff;
     color: #25243a;
     font-size: 14px;
-    box-sizing: border-box;
     outline: none;
     transition: border-color 0.2s, box-shadow 0.2s;
 }
 
-form input:focus {
+.form-group input:focus {
     border-color: #7059E8;
     box-shadow: 0 0 0 3px rgba(112, 89, 232, 0.13);
     background-color: #ffffff;
 }
 
-form input::placeholder {
+.form-group input::placeholder {
     color: #a09db1;
 }
 
 /* Submit button */
 form button {
     width: 100%;
-    margin-top: 25px;
+    margin-top: 10px;
     padding: 13px 18px;
     border: none;
     border-radius: 7px;
@@ -80,6 +93,30 @@ form button:hover {
     transform: translateY(-1px);
 }
 
+/* Messages */
+.message {
+    padding: 12px;
+    margin-bottom: 18px;
+    border-radius: 7px;
+    background-color: #eeeaff;
+    color: #5D47D1;
+    font-size: 14px;
+}
+
+/* Dashboard link */
+.back-link {
+    display: block;
+    margin-top: 20px;
+    text-align: center;
+    color: #7059E8;
+    text-decoration: none;
+    font-size: 14px;
+}
+
+.back-link:hover {
+    text-decoration: underline;
+}
+
 /* Mobile layout */
 @media (max-width: 600px) {
     body {
@@ -90,7 +127,8 @@ form button:hover {
         font-size: 23px;
     }
 
-    form {
+    .form-container {
         padding: 20px;
     }
 }
+```

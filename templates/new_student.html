@@ -1,40 +1,111 @@
+```html
 {% load static %}
-<link rel="stylesheet" href="{% static 'add_new_student.css' %}">
-<h1>
-    ADD NEW STUDENT
-</h1>
-<form action="new_student" method="POST">
-    {% csrf_token %}
-    <p>
-        Student ID
-    </p>
-    <input type="tel" name="student_ID" placeholder="Enter Student ID" required> 
-    <p>
-        student_firstName
-    </p>
-    <input type="text" name="student_firstName" placeholder="Enter Student First Name" required>
-   
-    <p>
-        student_surname
-    </p>
-    <input type="text" name="student_surname" placeholder="Enter Student Surname Name" required>
-    <p>
-        student_middleName
-    </p>
-    <input type="text" name="student_middleName" placeholder="Enter Student Middle Name" required>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add New Student</title>
+    <link rel="stylesheet" href="{% static 'add_new_student.css' %}">
+</head>
+<body>
 
-    <p>
-        Email
-    </p>
-    <input type="email" name="student_email" placeholder="Enter Student Email" required>
-    <p>
-        Class
-    </p>
-    <input type="text" name="student_class" placeholder="Enter Student's Current Class" required>
-    <p>
-        Gender
-    </p>
-    <input type="text" name="student_gender" placeholder="Enter Student's Gender" required>
-    <br>
-    <button type="submit">Add User</button>
-</form>
+    <div class="form-container">
+        <h1>ADD NEW STUDENT</h1>
+        <p class="subtitle">Enter the student's information below.</p>
+
+        {% for message in messages %}
+            <div class="message">{{ message }}</div>
+        {% endfor %}
+
+        <form action="{% url 'new_student' %}" method="POST">
+            {% csrf_token %}
+
+            <div class="form-group">
+                <label for="student_ID">Student ID</label>
+                <input
+                    type="text"
+                    id="student_ID"
+                    name="student_ID"
+                    placeholder="Enter Student ID"
+                    required
+                >
+            </div>
+
+            <div class="form-group">
+                <label for="student_firstName">First Name</label>
+                <input
+                    type="text"
+                    id="student_firstName"
+                    name="student_firstName"
+                    placeholder="Enter Student First Name"
+                    required
+                >
+            </div>
+
+            <div class="form-group">
+                <label for="student_surname">Surname</label>
+                <input
+                    type="text"
+                    id="student_surname"
+                    name="student_surname"
+                    placeholder="Enter Student Surname"
+                    required
+                >
+            </div>
+
+            <div class="form-group">
+                <label for="student_middleName">Middle Name</label>
+                <input
+                    type="text"
+                    id="student_middleName"
+                    name="student_middleName"
+                    placeholder="Enter Student Middle Name"
+                    required
+                >
+            </div>
+
+            <div class="form-group">
+                <label for="student_email">Email Address</label>
+                <input
+                    type="email"
+                    id="student_email"
+                    name="student_email"
+                    placeholder="Enter Student Email"
+                    required
+                >
+            </div>
+
+            <div class="form-group">
+                <label for="student_class">Class</label>
+                <input
+                    type="text"
+                    id="student_class"
+                    name="student_class"
+                    placeholder="Enter Student's Current Class"
+                    required
+                >
+            </div>
+
+            <div class="form-group">
+                <label for="student_gender">Gender</label>
+                <input
+                    type="text"
+                    id="student_gender"
+                    name="student_gender"
+                    placeholder="Enter Student's Gender"
+                    required
+                >
+            </div>
+
+            <button type="submit">Add Student</button>
+        </form>
+
+        <a href="{% url 'admin_dashboard' %}" class="back-link">
+            Back to Dashboard
+        </a>
+    </div>
+
+</body>
+</html>
+```

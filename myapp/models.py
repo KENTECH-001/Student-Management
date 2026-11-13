@@ -4,16 +4,19 @@ from django.contrib.auth.models import User
 # Create your models here.
 
 class Teacher(models.Model):
-    user= models.OneToOneField(
-        User, 
-        on_delete=models.CASCADE, 
+    user = models.OneToOneField(
+        User,
+        on_delete=models.CASCADE,
         related_name='teacher',
         null=True,
         blank=True
     )
 
+    gender = models.CharField(max_length=10, blank=True, default='')
+    assigned_class = models.CharField(max_length=10, blank=True, default='')
+
     class Meta:
-        db_table= 'myapp_teacher'
+        db_table = 'myapp_teacher'
 
 class Student(models.Model):
     student_id = models.CharField(max_length=200, unique=True)

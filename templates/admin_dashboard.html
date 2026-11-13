@@ -1,3 +1,4 @@
+```html
 {% load static %}
 
 <!DOCTYPE html>
@@ -9,13 +10,13 @@
     <link rel="stylesheet" href="{% static 'dashboard.css' %}">
 </head>
 <body>
+
     {% for message in messages %}
-    <h3>
-    {{message}}
-    </h3>       
+        <h3>{{ message }}</h3>
     {% endfor %}
 
     <div class="dashboard">
+
         <!-- Sidebar -->
         <aside class="sidebar">
             <h2 class="logo">Edu<span>Manage</span></h2>
@@ -29,14 +30,17 @@
                 <a href="#">▧ Results</a>
                 <a href="#">⚙ Settings</a>
             </nav>
-            
 
             <div class="sidebar-bottom">
                 <div class="admin-avatar">A</div>
                 <div>
-                    <strong>Admin User</strong>
+                    <strong>{{ request.user.first_name|default:request.user.username }}</strong>
                     <small>Administrator</small>
-                    <a href="{% url 'logout' %}">Logout</a>
+
+                    <form method="POST" action="{% url 'logout' %}">
+                        {% csrf_token %}
+                        <button type="submit">Logout</button>
+                    </form>
                 </div>
             </div>
         </aside>
@@ -62,7 +66,7 @@
                 <div class="stat-card">
                     <div class="stat-icon purple">♙</div>
                     <p>Total Students</p>
-                    <h2>{{names|length}}</h2>
+                    <h2>{{ names|length }}</h2>
                     <small>Registered students</small>
                 </div>
 
@@ -83,7 +87,7 @@
                 <div class="stat-card">
                     <div class="stat-icon blue">♧</div>
                     <p>Teachers</p>
-                    <h2>{{list|length}}</h2>
+                    <h2>{{ list|length }}</h2>
                     <small>Registered teachers</small>
                 </div>
 
@@ -98,13 +102,16 @@
                         <p>Manage your recently registered students.</p>
                     </div>
 
-                    <a href="{% url 'new_student' %}" class="add-button">+ Add Student</a>
+                    <a href="{% url 'new_student' %}" class="add-button">
+                        + Add Student
+                    </a>
                 </div>
 
                 <div class="search-row">
-                    <form action="student_details" method="GET">
-                    <input type="search" name="search" placeholder="Search students...">
-                    <button type="submit">Search</button>
+                    <form action="{% url 'student_details' %}" method="GET">
+                        <input type="search" name="search"
+                               placeholder="Search students...">
+                        <button type="submit">Search</button>
                     </form>
                 </div>
 
@@ -112,31 +119,40 @@
                     <table>
                         <thead>
                             <tr>
-                                <th>Student Name </th>
+                                <th>Student Name</th>
                                 <th>Student ID</th>
                                 <th>Class</th>
                                 <th>Email</th>
                                 <th>Gender</th>
                             </tr>
                         </thead>
+
                         <tbody>
                             {% for name in names|slice:":5" %}
                             <tr>
                                 <td>
                                     <div class="student">
-                                        <div class="student-avatar purple-bg">{{name.firstName}}</div>
-                                        <strong>{{name.surname}}</strong>
+                                        <div class="student-avatar purple-bg">
+                                            {{ name.firstName|first }}
+                                        </div>
+                                        <strong>
+                                            {{ name.firstName }} {{ name.surname }}
+                                        </strong>
                                     </div>
                                 </td>
-                                <td>{{name.student_id}}</td>
-                                <td>{{name.studentClass}}</td>
-                                <td>{{name.email}}</td>
-                                <td>{{name.registrationDate}}</td>
-                                <td><span class="status active-status">{{name.gender}}</span></td>
+
+                                <td>{{ name.student_id }}</td>
+                                <td>{{ name.studentClass }}</td>
+                                <td>{{ name.email }}</td>
+                                <td>
+                                    <span class="status active-status">
+                                        {{ name.gender }}
+                                    </span>
+                                </td>
                             </tr>
                             {% empty %}
                             <tr>
-                                No records Yet
+                                <td colspan="5">No student records yet.</td>
                             </tr>
                             {% endfor %}
                         </tbody>
@@ -144,8 +160,10 @@
                 </div>
 
                 <div class="table-footer">
-                    Showing 4 sample students
-                    <a href="{% url 'list_students' %}">View all students →</a>
+                    Showing {{ names|length }} registered students
+                    <a href="{% url 'list_students' %}">
+                        View all students →
+                    </a>
                 </div>
 
             </section>
@@ -158,15 +176,37 @@
                     <p class="muted">Common administrative tasks</p>
 
                     <div class="quick-actions">
-                        <a href="{% url 'register_teacher' %}">＋ Register Teacher</a>
-                        <a href="{% url 'update_student' %}">✓ Update Teacher's Data</a>
-                        <a href="{% url 'delete_student' %}">✓ Delete Teacher</a>
+                        <a href="{% url 'register_teacher' %}">
+                            ＋ Register Teacher
+                        </a>
 
-                        <a href="{% url 'new_student' %}">＋ Register Student</a>
-                        <a href="{% url 'update_student' %}">✓ Update Student's Data</a>
-                        <a href="{% url 'delete_student' %}">✓ Delete Student</a>
-                        <a href="{% url 'count' %}">▤ Manage Classes</a>
-                        <a href="{% url 'attendance' %}">✓ Record Attendance</a>
+                        <a href="{% url 'update_teacher' %}">
+                            ✓ Update Teacher's Data
+                        </a>
+
+                        <a href="{% url 'delete_teacher' %}">
+                            ✓ Delete Teacher
+                        </a>
+
+                        <a href="{% url 'new_student' %}">
+                            ＋ Register Student
+                        </a>
+
+                        <a href="{% url 'update_student' %}">
+                            ✓ Update Student's Data
+                        </a>
+
+                        <a href="{% url 'delete_student' %}">
+                            ✓ Delete Student
+                        </a>
+
+                        <a href="{% url 'count' %}">
+                            ▤ Manage Classes
+                        </a>
+
+                        <a href="{% url 'attendance' %}">
+                            ✓ Record Attendance
+                        </a>
                     </div>
                 </div>
 
@@ -176,12 +216,12 @@
 
                     <div class="overview-item">
                         <span>Students</span>
-                        <strong>{{names|length}}</strong>
+                        <strong>{{ names|length }}</strong>
                     </div>
 
                     <div class="overview-item">
                         <span>Teachers</span>
-                        <strong>{{list|length}}</strong>
+                        <strong>{{ list|length }}</strong>
                     </div>
 
                     <div class="overview-item">
@@ -197,8 +237,8 @@
             </footer>
 
         </main>
-
     </div>
 
 </body>
 </html>
+```
