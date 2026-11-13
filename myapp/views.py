@@ -103,7 +103,7 @@ def register_teacher(request):
                 user=user
                 )
                 messages.success(request, 'Teacher Successfully Registered!')
-                return redirect('login_teacher')
+                return redirect('admin_dashboard')
             
     return render(request, 'register_teacher.html')
 
