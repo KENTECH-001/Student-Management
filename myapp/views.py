@@ -132,7 +132,9 @@ def register_teacher(request):
 
 
 
+
 @admin_required
+@user_passes_test(is_admin)
 def update_teacher(request):
     if request.method == 'POST':
         username = request.POST.get('username')
@@ -145,7 +147,11 @@ def update_teacher(request):
         teacher.user.first_name = request.POST.get('fullname')
         teacher.user.email = request.POST.get('email')
         teacher.gender = request.POST.get('gender')
-        teacher.assigned_class = request.POST.get('assigned_class')
+
+        teacher.assigned_class = get_object_or_404(
+            SchoolClass,
+            id=request.POST.get('assigned_class')
+        )
 
         teacher.user.save()
         teacher.save()
@@ -158,15 +164,25 @@ def update_teacher(request):
 
     username = request.GET.get('username')
 
-    if username:
-        teacher = get_object_or_404(
-            Teacher,
-            user__username=username
-        )
+    if not username:
+        return redirect('admin_dashboard')
+
+    teacher = get_object_or_404(
+        Teacher,
+        user__username=username
+    )
+
+    classes = SchoolClass.objects.all()
 
     return render(
-            request,
-            'update_teacher.html', {'details':teacher})
+        request,
+        'update_teacher.html',
+        {
+            'details': teacher,
+            'classes': classes
+        }
+    )
+
 
 
 
@@ -174,6 +190,7 @@ def update_teacher(request):
 @admin_required
 @user_passes_test(is_admin)
 def delete_teacher(request):
+
     if request.method == 'POST':
         username = request.POST.get('username')
 
@@ -188,6 +205,7 @@ def delete_teacher(request):
             request,
             'Teacher deleted successfully!'
         )
+
         return redirect('admin_dashboard')
 
     username = request.GET.get('username')
@@ -200,10 +218,11 @@ def delete_teacher(request):
 
         return render(
             request,
-            'delete_teacher.html')
+            'delete_teacher.html',
+            {'details': teacher}
+        )
 
-    return render(request, 'delete_teacher.html', {'details':teacher})
-
+    return redirect('admin_dashboard')
 
 
 def confirm_student_id(request):

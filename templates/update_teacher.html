@@ -1,3 +1,4 @@
+```html
 {% load static %}
 <!DOCTYPE html>
 <html lang="en">
@@ -62,13 +63,17 @@
 
             <div class="form-group">
                 <label for="assigned_class">Assigned Class</label>
-                <input
-                    type="text"
-                    id="assigned_class"
-                    name="assigned_class"
-                    value="{{ details.assigned_class }}"
-                    required
-                >
+
+                <select id="assigned_class" name="assigned_class" required>
+                    {% for school_class in classes %}
+                        <option
+                            value="{{ school_class.id }}"
+                            {% if details.assigned_class_id == school_class.id %}selected{% endif %}
+                        >
+                            {{ school_class.name }}
+                        </option>
+                    {% endfor %}
+                </select>
             </div>
 
             <button type="submit">Save Changes</button>
@@ -81,3 +86,4 @@
 
 </body>
 </html>
+```

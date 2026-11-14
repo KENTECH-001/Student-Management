@@ -1,3 +1,4 @@
+```html
 {% load static %}
 <!DOCTYPE html>
 <html lang="en">
@@ -16,22 +17,22 @@
             <div class="message">{{ message }}</div>
         {% endfor %}
 
-        {% if detail %}
+        {% if details %}
             <p class="warning">
                 Are you sure you want to delete this teacher?
             </p>
 
             <div class="teacher-details">
-                <p><strong>Full Name:</strong> {{ detail.user.first_name }}</p>
-                <p><strong>Username:</strong> {{ detail.user.username }}</p>
-                <p><strong>Email:</strong> {{ detail.user.email }}</p>
-                <p><strong>Gender:</strong> {{ detail.gender }}</p>
-                <p><strong>Assigned Class:</strong> {{ detail.assigned_class }}</p>
+                <p><strong>Full Name:</strong> {{ details.user.first_name }}</p>
+                <p><strong>Username:</strong> {{ details.user.username }}</p>
+                <p><strong>Email:</strong> {{ details.user.email }}</p>
+                <p><strong>Gender:</strong> {{ details.gender }}</p>
+                <p><strong>Assigned Class:</strong> {{ details.assigned_class }}</p>
             </div>
 
             <form action="{% url 'delete_teacher' %}" method="POST">
                 {% csrf_token %}
-                <input type="hidden" name="username" value="{{ detail.user.username }}">
+                <input type="hidden" name="username" value="{{ details.user.username }}">
 
                 <button type="submit" class="delete-button">
                     Confirm Delete
@@ -55,3 +56,4 @@
 
 </body>
 </html>
+```
