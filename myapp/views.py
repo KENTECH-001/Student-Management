@@ -164,13 +164,13 @@ def update_teacher(request):
             user__username=username
         )
 
-        return render(
+    return render(
             request,
             'update_teacher.html',
             {'details': teacher}
         )
 
-    return redirect('admin_dashboard')
+    # return redirect('admin_dashboard')
 
 
 @admin_required
