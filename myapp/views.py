@@ -95,6 +95,7 @@ def register_teacher(request):
         email = request.POST.get('email')
         assigned_class = request.POST.get('assigned_class')
         gender = request.POST.get('gender')
+        class_teacher=request.POST.get('class_teacher')
         password = request.POST.get('password')
         confirm_password = request.POST.get('confirm_password')
 

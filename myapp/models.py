@@ -1,7 +1,16 @@
 from django.db import models
 from django.contrib.auth.models import User
 
-# Create your models here.
+# Create your models here.\
+
+
+class SchoolClass(models.Model):
+    name=models.CharField(max_length=100, unique=True)
+
+    def __str__(self):
+        return self.name
+
+
 
 class Teacher(models.Model):
     user = models.OneToOneField(
@@ -12,11 +21,25 @@ class Teacher(models.Model):
         blank=True
     )
 
-    gender = models.CharField(max_length=10, blank=True, default='')
-    assigned_class = models.CharField(max_length=10, blank=True, default='')
+    assigned_class = models.OneToOneField(
+        SchoolClass,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name='class_teacher'
+    )
+
+    gender = models.CharField(
+        max_length=10,
+        blank=True,
+        default=''
+    )
 
     class Meta:
         db_table = 'myapp_teacher'
+
+
+
 
 class Student(models.Model):
     student_id = models.CharField(max_length=200, unique=True)
@@ -24,13 +47,25 @@ class Student(models.Model):
     surname = models.CharField(max_length=200)
     middleName = models.CharField(max_length=200)
     email = models.EmailField(max_length=100)
-    studentClass = models.CharField(max_length=10)
     gender = models.CharField(max_length=10)
+
     attendance = models.BooleanField(default=True)
+
+    assigned_class = models.ForeignKey(
+        SchoolClass,
+        on_delete=models.PROTECT,
+        null=True,
+        blank=True,
+        related_name='students'
+    )
+
     registrationDate = models.DateTimeField(auto_now_add=True)
 
     class Meta:
         db_table = 'myapp_student'
+
+
+
 
 
 
@@ -112,6 +147,9 @@ class Senior_subjects(models.Model):
 
     class Meta:
         db_table='senior_subjects'
+
+
+    
 
 
 
