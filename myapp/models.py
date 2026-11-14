@@ -48,9 +48,7 @@ class Student(models.Model):
     middleName = models.CharField(max_length=200)
     email = models.EmailField(max_length=100)
     gender = models.CharField(max_length=10)
-
     attendance = models.BooleanField(default=True)
-
     assigned_class = models.ForeignKey(
         SchoolClass,
         on_delete=models.PROTECT,
@@ -58,7 +56,6 @@ class Student(models.Model):
         blank=True,
         related_name='students'
     )
-
     registrationDate = models.DateTimeField(auto_now_add=True)
 
     class Meta:

@@ -537,37 +537,36 @@ def student_class(request):
 
 @admin_required
 def SS1(request):
-    tb1 = Student.objects.filter(studentClass='SS1').values()
-    return render(request, 'SS1.html', {'tb1':tb1})
-
+    tb1 = Student.objects.filter(assigned_class__name='SS1').values()
+    return render(request, 'SS1.html', {'tb1': tb1})
 
 @admin_required
 def SS2(request):
-    tb2 = Student.objects.filter(studentClass='SS2').values()
+    tb2 = Student.objects.filter(assigned_class_name='SS2').values()
     return render(request, 'SS2.html', {'tb2':tb2})
 
 
 @admin_required
 def SS3(request):
-    tb3 = Student.objects.filter(studentClass='SS3').values()
+    tb3 = Student.objects.filter(assigned_class_name='SS3').values()
     return render(request, 'SS3.html', {'tb3':tb3})
 
 
 @admin_required
 def JSS1(request):
-    tb4 = Student.objects.filter(studentClass='JSS1').values()
+    tb4 = Student.objects.filter(assigned_class_name='JSS1').values()
     return render(request, 'JSS1.html', {'tb4':tb4})
 
 
 @admin_required
 def JSS2(request):
-    tb5 = Student.objects.filter(studentClass='JSS2').values()
+    tb5 = Student.objects.filter(assigned_class_name='JSS2').values()
     return render(request, 'JSS2.html', {'tb5':tb5})
 
 
 @admin_required
 def JSS3(request):
-    tb6 = Student.objects.filter(studentClass='JSS3').values()
+    tb6 = Student.objects.filter(assigned_class_name='JSS3').values()
     return render(request, 'JSS3.html', {'tb6':tb6})
 
 
@@ -579,12 +578,12 @@ def list_students(request):
 
 @admin_required
 def count(request):
-    count1=Student.objects.filter(studentClass='JSS1').count()
-    count2=Student.objects.filter(studentClass='JSS2').count()
-    count3=Student.objects.filter(studentClass='JSS3').count()
-    count4=Student.objects.filter(studentClass='SS1').count()
-    count5=Student.objects.filter(studentClass='SS2').count()
-    count6=Student.objects.filter(studentClass='SS3').count()
+    count1=Student.objects.filter(assigned_class_name='JSS1').count()
+    count2=Student.objects.filter(assigned_class_name='JSS2').count()
+    count3=Student.objects.filter(assigned_class_name='JSS3').count()
+    count4=Student.objects.filter(assigned_class_name='SS1').count()
+    count5=Student.objects.filter(assigned_class_name='SS2').count()
+    count6=Student.objects.filter(assigned_class_name='SS3').count()
     return render(request, 'count.html', {'count1': count1, 'count2': count2, 'count3': count3, 'count4': count4, 'count5': count5, 'count6': count6})
 
 
@@ -592,83 +591,82 @@ def count(request):
 def attendance(request):
     data= Student.objects.all().values()
     data2= Student_attendance.objects.all().values()
-
     return render(request, 'attendance.html', {'datas':data, 'datas2':data2})
 
 
 
-@api_view (['GET'])
-@permission_classes([IsAuthenticated])
-def view(request):
-    students= Student.objects.all()
-    serializer = StudentSerializer(students, many=True)
-    return Response(serializer.data)
+# @api_view (['GET'])
+# @permission_classes([IsAuthenticated])
+# def view(request):
+#     students= Student.objects.all()
+#     serializer = StudentSerializer(students, many=True)
+#     return Response(serializer.data)
 
-@api_view(['POST'])
-def create_api(request):
-    serializer= StudentSerializer(
-        data=request.data)
-    if serializer.is_valid():
-        serializer.save()
-        return Response(
-            serializer.data,
-                status=status.HTTP_201_CREATED)
-    return Response(
-        serializer.errors,
-                status=status.HTTP_400_BAD_REQUEST)
+# @api_view(['POST'])
+# def create_api(request):
+#     serializer= StudentSerializer(
+#         data=request.data)
+#     if serializer.is_valid():
+#         serializer.save()
+#         return Response(
+#             serializer.data,
+#                 status=status.HTTP_201_CREATED)
+#     return Response(
+#         serializer.errors,
+#                 status=status.HTTP_400_BAD_REQUEST)
 
-@api_view(['PUT'])
-def update_api(request, id):
-    student=Student.objects.get(id=id)
-    serializer=StudentSerializer(student,
-        data=request.data)
-    if serializer.is_valid():
-        serializer.save()
-        return Response(
-            serializer.data,
-                status=status.HTTP_200_OK)
-    return Response(
-        serializer.errors,
-            status=status.HTTP_400_BAD_REQUEST)
+# @api_view(['PUT'])
+# def update_api(request, id):
+#     student=Student.objects.get(id=id)
+#     serializer=StudentSerializer(student,
+#         data=request.data)
+#     if serializer.is_valid():
+#         serializer.save()
+#         return Response(
+#             serializer.data,
+#                 status=status.HTTP_200_OK)
+#     return Response(
+#         serializer.errors,
+#             status=status.HTTP_400_BAD_REQUEST)
 
-@api_view(['PATCH'])
-def patch_api(request, id):
-    student=Student.objects.get(id=id)
-    serializer=StudentSerializer(student,
-        data=request.data, partial=True)
-    if serializer.is_valid():
-        serializer.save()
-        return Response(
-            serializer.data,
-                status=status.HTTP_200_OK)
-    return Response(
-        serializer.errors,
-            status=status.HTTP_400_BAD_REQUEST)
-
-
-@api_view(['GET'])
-def read_api(request, id):
-    try:
-        student=Student.objects.get(id=id)
-    except Student.DoesNotExist:
-        return Response(
-            {"error":"Student Not Found"},
-             status=status.HTTP_404_NOT_FOUND)
-    serializer=StudentSerializer(student)
-    return Response(serializer.data)
+# @api_view(['PATCH'])
+# def patch_api(request, id):
+#     student=Student.objects.get(id=id)
+#     serializer=StudentSerializer(student,
+#         data=request.data, partial=True)
+#     if serializer.is_valid():
+#         serializer.save()
+#         return Response(
+#             serializer.data,
+#                 status=status.HTTP_200_OK)
+#     return Response(
+#         serializer.errors,
+#             status=status.HTTP_400_BAD_REQUEST)
 
 
-@api_view(['DELETE'])
-def delete_api(request, id):
-    try:
-        student=Student.objects.get(id=id)
+# @api_view(['GET'])
+# def read_api(request, id):
+#     try:
+#         student=Student.objects.get(id=id)
+#     except Student.DoesNotExist:
+#         return Response(
+#             {"error":"Student Not Found"},
+#              status=status.HTTP_404_NOT_FOUND)
+#     serializer=StudentSerializer(student)
+#     return Response(serializer.data)
 
-    except Student.DoesNotExist:
-        return Response(
-            {"error": "Student Not Found"},
-            status=status.HTTP_404_NOT_FOUND)
-    student.delete()
-    return Response(status=status.HTTP_204_NO_CONTENT)
+
+# @api_view(['DELETE'])
+# def delete_api(request, id):
+#     try:
+#         student=Student.objects.get(id=id)
+
+#     except Student.DoesNotExist:
+#         return Response(
+#             {"error": "Student Not Found"},
+#             status=status.HTTP_404_NOT_FOUND)
+#     student.delete()
+#     return Response(status=status.HTTP_204_NO_CONTENT)
 
     
 
