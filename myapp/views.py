@@ -166,7 +166,7 @@ def update_teacher(request):
 
     return render(
             request,
-            'update_teacher.html')
+            'update_teacher.html', {'details':teacher})
 
 
 
@@ -202,7 +202,7 @@ def delete_teacher(request):
             request,
             'delete_teacher.html')
 
-    return render(request, 'delete_teacher.html')
+    return render(request, 'delete_teacher.html', {'details':teacher})
 
 
 
