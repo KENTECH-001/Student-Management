@@ -371,7 +371,7 @@ def new_student(request):
             messages.error(request, 'Student ID already exists!')
             return redirect('new_student')
 
-        student = Student(
+        student = Student.objects.create(
             student_id=student_ID,
             firstName=request.POST.get('student_firstName'),
             surname=request.POST.get('student_surname'),
@@ -380,13 +380,10 @@ def new_student(request):
             studentClass=request.POST.get('student_class'),
             gender=request.POST.get('student_gender')
         )
-
         student.save()
-
         messages.success(
             request,
-            'You have successfully added the student!'
-        )
+            'You have successfully added the student!')
         return redirect('admin_dashboard')
 
     return render(request, 'new_student.html')
