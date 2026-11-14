@@ -19,6 +19,7 @@ urlpatterns = [
     path('student_details', views.student_details, name='student_details'),
     path('update_student', views.update_student, name='update_student'),
     path('update_teacher', views.update_teacher, name='update_teacher'),
+    path('delete_teacher', views.delete_teacher, name='delete_teacher'),
     path('delete_student', views.delete_student, name='delete_student'),
     path('student_class', views.student_class, name='student_class'),
     path('SS1', views.SS1, name='SS1'),
