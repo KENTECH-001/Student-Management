@@ -4,7 +4,7 @@ from django.contrib import messages, auth
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib import messages, auth
 from django.contrib.auth.decorators import login_required, user_passes_test
-from .models import Student, Teacher, Student_attendance, StudentLogin
+from .models import Student, Teacher, Student_attendance, StudentLogin, SchoolClass
 from django.views.decorators.cache import never_cache
 from rest_framework.decorators import api_view, permission_classes
 from .serializers import StudentSerializer
@@ -112,18 +112,19 @@ def register_teacher(request):
 
         with transaction.atomic():
             user = User.objects.create_user(
-                username=username,
-                first_name=fullname,
-                email=email,
-                password=password
+            username=username,
+            first_name=fullname,
+            email=email,
+            password=password
             )
 
-            Teacher.objects.create(
-                user=user,
-                assigned_class=assigned_class,
-                gender=gender
-            )
+        school_class = SchoolClass.objects.get(name=assigned_class)
 
+        Teacher.objects.create(
+        user=user,
+        assigned_class=school_class,
+        gender=gender
+    )
         messages.success(request, 'Teacher successfully registered!')
         return redirect('admin_dashboard')
 
