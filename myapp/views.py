@@ -166,11 +166,9 @@ def update_teacher(request):
 
     return render(
             request,
-            'update_teacher.html',
-            {'details': teacher}
-        )
+            'update_teacher.html')
 
-    # return redirect('admin_dashboard')
+
 
 
 @admin_required
@@ -202,9 +200,7 @@ def delete_teacher(request):
 
         return render(
             request,
-            'delete_teacher.html',
-            {'detail': teacher}
-        )
+            'delete_teacher.html')
 
     return render(request, 'delete_teacher.html')
 
