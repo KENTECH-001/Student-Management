@@ -606,17 +606,18 @@ def list_students(request):
     names = Student.objects.all().values()
     return render (request, 'list_students.html', {'names':names})
 
-
 @admin_required
 def count(request):
-    count1=Student.objects.filter(assigned_class_name='JSS1').count()
-    count2=Student.objects.filter(assigned_class_name='JSS2').count()
-    count3=Student.objects.filter(assigned_class_name='JSS3').count()
-    count4=Student.objects.filter(assigned_class_name='SS1').count()
-    count5=Student.objects.filter(assigned_class_name='SS2').count()
-    count6=Student.objects.filter(assigned_class_name='SS3').count()
-    return render(request, 'count.html', {'count1': count1, 'count2': count2, 'count3': count3, 'count4': count4, 'count5': count5, 'count6': count6})
+    count1 = Student.objects.filter(assigned_class__name='JSS1').count()
+    count2 = Student.objects.filter(assigned_class__name='JSS2').count()
+    count3 = Student.objects.filter(assigned_class__name='JSS3').count()
+    count4 = Student.objects.filter(assigned_class__name='SS1').count()
+    count5 = Student.objects.filter(assigned_class__name='SS2').count()
+    count6 = Student.objects.filter(assigned_class__name='SS3').count()
 
+    return render(request, 'count.html', {
+        'count1': count1,'count2': count2,'count3': count3,'count4': count4,'count5': count5,'count6': count6
+    })
 
 @admin_required
 def attendance(request):
