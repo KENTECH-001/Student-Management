@@ -400,28 +400,38 @@ def login_student(request):
 def new_student(request):
     if request.method == 'POST':
         student_ID = request.POST.get('student_ID')
+        class_id = request.POST.get('student_class')
 
         if Student.objects.filter(student_id=student_ID).exists():
             messages.error(request, 'Student ID already exists!')
             return redirect('new_student')
 
-        student = Student.objects.create(
+        school_class = get_object_or_404(
+            SchoolClass,
+            id=class_id
+        )
+
+        Student.objects.create(
             student_id=student_ID,
             firstName=request.POST.get('student_firstName'),
             surname=request.POST.get('student_surname'),
             middleName=request.POST.get('student_middleName'),
             email=request.POST.get('student_email'),
-            studentClass=request.POST.get('student_class'),
+            assigned_class=school_class,
             gender=request.POST.get('student_gender')
         )
-        student.save()
+
         messages.success(
             request,
-            'You have successfully added the student!')
+            'You have successfully added the student!'
+        )
+
         return redirect('admin_dashboard')
 
     return render(request, 'new_student.html')
 
+
+    
 
 def login_teacher(request):
     if request.method == 'POST':
