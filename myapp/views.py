@@ -183,6 +183,11 @@ def update_teacher(request):
         }
     )
 
+@admin_required
+@user_passes_test(is_admin)
+def list_teacher(request):
+    teachers = Teacher.objects.select_related('user', 'assigned_class').all()
+    return render(request, 'list_teacher.html', {'data':teachers})
 
 
 

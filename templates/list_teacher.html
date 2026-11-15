@@ -1,0 +1,110 @@
+
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registered Teachers</title>
+    <link rel="stylesheet" href="{% static 'list_teacher.css' %}">
+</head>
+<body>
+
+    <div class="container">
+
+        <header class="page-header">
+            <div>
+                <h1>Registered Teachers</h1>
+                <p>View and manage all registered teachers.</p>
+            </div>
+
+            <a href="{% url 'admin_dashboard' %}" class="back-button">
+                Back to Dashboard
+            </a>
+        </header>
+
+        {% for message in messages %}
+            <div class="message">{{ message }}</div>
+        {% endfor %}
+
+        <section class="content-card">
+
+            <div class="section-header">
+                <div>
+                    <h2>Teachers Directory</h2>
+                    <p>Total Registered Teachers: {{ data|length }}</p>
+                </div>
+
+                <a href="{% url 'register_teacher' %}" class="add-button">
+                    + Register Teacher
+                </a>
+            </div>
+
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>S/N</th>
+                            <th>Username</th>
+                            <th>Full Name</th>
+                            <th>Email Address</th>
+                            <th>Gender</th>
+                            <th>Assigned Class</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        {% for teacher in data %}
+                            <tr>
+                                <td>{{ forloop.counter }}</td>
+
+                                <td>{{ teacher.user.username }}</td>
+
+                                <td>
+                                    {{ teacher.user.first_name }}
+                                </td>
+
+                                <td>{{ teacher.user.email }}</td>
+
+                                <td>{{ teacher.gender|default:"Not specified" }}</td>
+
+                                <td>
+                                    {% if teacher.assigned_class %}
+                                        {{ teacher.assigned_class.name }}
+                                    {% else %}
+                                        Not assigned
+                                    {% endif %}
+                                </td>
+
+                                <td>
+                                    <a
+                                        href="{% url 'update_teacher' %}?username={{ teacher.user.username }}"
+                                        class="update-button"
+                                    >
+                                        Update
+                                    </a>
+                                </td>
+                            </tr>
+
+                        {% empty %}
+                            <tr>
+                                <td colspan="7" class="empty-message">
+                                    No teachers have been registered yet.
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+
+        </section>
+
+        <footer>
+            Student Management System
+        </footer>
+
+    </div>
+
+</body>
+</html>
