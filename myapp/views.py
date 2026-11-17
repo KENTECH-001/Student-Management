@@ -68,6 +68,17 @@ def admin_required(view_func):
 
 
 
+def is_teacher(user):
+    return user.is_authenticated and hasattr(user, 'teacher')
+
+
+def teacher_required(view_func):
+    return user_passes_test(
+        is_teacher, login_url='login_teacher'
+    )(view_func)
+
+
+
 def login_admin(request):
     if request.method == 'POST':
         username = request.POST.get('username')
@@ -431,7 +442,6 @@ def new_student(request):
     return render(request, 'new_student.html')
 
 
-    
 
 def login_teacher(request):
     if request.method == 'POST':
@@ -629,11 +639,85 @@ def count(request):
         'count1': count1,'count2': count2,'count3': count3,'count4': count4,'count5': count5,'count6': count6
     })
 
-@admin_required
-def attendance(request):
-    data= Student.objects.all().values()
-    data2= Student_attendance.objects.all().values()
-    return render(request, 'attendance.html', {'datas':data, 'datas2':data2})
+
+
+
+@teacher_required
+def student_attendance(request):
+    teacher = request.user.teacher
+    today = timezone.localdate()
+
+    students = Student.objects.filter(
+        assigned_class=teacher.assigned_class
+    )
+
+    attendance_records = Student_attendance.objects.filter(
+        student__in=students,
+        date=today
+    )
+
+    attendance_data = {
+        record.student_id: record.status
+        for record in attendance_records
+    }
+
+    for student in students:
+        student.today_status = attendance_data.get(student.id)
+
+    return render(request, 'attendance.html', {
+        'students': students
+    })
+
+
+
+
+@teacher_required
+def choose_attendance(request):
+    if request.method != 'POST':
+        return redirect('student_attendance')
+
+    teacher = request.user.teacher
+
+    student_id = request.POST.get('student_id')
+    status = request.POST.get('status')
+    if not student_id:
+        messages.error(request, 'Please select a student.')
+        return redirect('student_attendance')
+
+    valid_statuses = dict(Student_attendance.STATUS_CHOICES)
+
+    if status not in valid_statuses:
+        messages.error(request, 'Invalid attendance status.')
+        return redirect('student_attendance')
+
+    if teacher.assigned_class is None:
+        messages.error(request, 'You have not been assigned a class.')
+        return redirect('student_attendance')
+
+    student = get_object_or_404(
+        Student,
+        student_id=student_id,
+        assigned_class=teacher.assigned_class
+    )
+
+    today = timezone.localdate()
+
+    Student_attendance.objects.update_or_create(
+        student=student,
+        date=today,
+        defaults={'status': status}
+    )
+
+    messages.success(
+        request,
+        f'{student.firstName} attendance marked as {status}.'
+    )
+
+    return redirect('student_attendance')
+
+
+
+
 
 
 
