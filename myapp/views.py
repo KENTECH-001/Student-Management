@@ -647,9 +647,12 @@ def student_attendance(request):
     teacher = request.user.teacher
     today = timezone.localdate()
 
-    students = Student.objects.filter(
-        assigned_class=teacher.assigned_class
-    )
+    if teacher.assigned_class is None:
+        students = Student.objects.none()
+    else:
+        students = Student.objects.filter(
+            assigned_class=teacher.assigned_class
+        )
 
     attendance_records = Student_attendance.objects.filter(
         student__in=students,
