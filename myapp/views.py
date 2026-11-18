@@ -4,7 +4,7 @@ from django.contrib import messages, auth
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib import messages, auth
 from django.contrib.auth.decorators import login_required, user_passes_test
-from .models import Student, Teacher, Student_attendance, StudentLogin, SchoolClass
+from .models import Student, Teacher, Student_attendance, StudentLogin, SchoolClass, Subject, StudentResult
 from django.views.decorators.cache import never_cache
 from rest_framework.decorators import api_view, permission_classes
 from .serializers import StudentSerializer
@@ -717,6 +717,129 @@ def choose_attendance(request):
     )
 
     return redirect('student_attendance')
+
+
+
+@login_required(login_url='login_teacher')
+def my_students(request):
+
+    if not hasattr(request.user, 'teacher'):
+        return redirect('role')
+
+    teacher = request.user.teacher
+
+    if teacher.assigned_class is None:
+        messages.error(request, 'You have not been assigned a class!')
+        return redirect('teacher_dashboard')
+
+    students = Student.objects.filter(
+        assigned_class=teacher.assigned_class
+    )
+
+    return render(request, 'my_students.html', {
+        'students': students
+    })
+
+
+
+@login_required(login_url='login_teacher')
+def add_results(request):
+    teacher = request.user.teacher
+
+    if teacher.assigned_class is None:
+        messages.error(request, 'You have not been assigned a class.')
+        return redirect('teacher_dashboard')
+
+    students = Student.objects.filter(
+        assigned_class=teacher.assigned_class
+    )
+
+    class_name = teacher.assigned_class.name
+
+    if class_name.startswith('JSS'):
+        subjects = Subject.objects.filter(school_level='Junior')
+    else:
+        subjects = Subject.objects.filter(school_level='Senior')
+
+    if request.method == 'POST':
+        try:
+            student_id = request.POST.get('student')
+            subject_id = request.POST.get('subject')
+            session = request.POST.get('session')
+            term = request.POST.get('term')
+
+            test = int(request.POST.get('test'))
+            exam = int(request.POST.get('exam'))
+
+            if not (0 <= test <= 40):
+                messages.error(request, 'Test mark must be between 0 and 40.')
+                return redirect('add_results')
+
+            if not (0 <= exam <= 60):
+                messages.error(request, 'Exam mark must be between 0 and 60.')
+                return redirect('add_results')
+
+            student = get_object_or_404(
+                students,
+                student_id=student_id
+            )
+
+            subject = get_object_or_404(
+                subjects,
+                id=subject_id
+            )
+
+            if not session or len(session) != 9:
+                messages.error(request, 'Enter a valid session, e.g. 2026/2027.')
+                return redirect('add_results')
+
+            if term not in dict(StudentResult.TERM_CHOICES):
+                messages.error(request, 'Select a valid term.')
+                return redirect('add_results')
+
+            total = test + exam
+
+            if total >= 70:
+                grade = 'A'
+            elif total >= 60:
+                grade = 'B'
+            elif total >= 50:
+                grade = 'C'
+            elif total >= 45:
+                grade = 'D'
+            elif total >= 40:
+                grade = 'E'
+            else:
+                grade = 'F'
+
+            StudentResult.objects.update_or_create(
+                student=student,
+                subject=subject,
+                session=session,
+                term=term,
+                defaults={
+                    'test': test,
+                    'exam': exam,
+                    'total': total,
+                    'grade': grade
+                }
+            )
+
+            messages.success(request, 'Student result saved successfully!')
+
+            return redirect('add_results')
+
+        except (ValueError, TypeError):
+            messages.error(request, 'Please enter valid marks.')
+
+    return render(request, 'add_results.html', {
+        'students': students,
+        'subjects': subjects,
+        'teacher': teacher
+    })
+
+
+
 
 
 

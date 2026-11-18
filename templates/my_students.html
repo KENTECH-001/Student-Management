@@ -1,0 +1,243 @@
+
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>My Students | EduManage</title>
+
+    <link rel="stylesheet" href="{% static 'my_students.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+</head>
+
+<body>
+
+<div class="dashboard-container">
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+
+        <div class="logo">
+            <i class="fas fa-graduation-cap"></i>
+            <h2>EduManage</h2>
+        </div>
+
+        <nav class="sidebar-nav">
+
+            <a href="{% url 'teacher_dashboard' %}">
+                <i class="fas fa-house"></i>
+                <span>Dashboard</span>
+            </a>
+
+            <a href="{% url 'my_students' %}" class="active">
+                <i class="fas fa-users"></i>
+                <span>My Students</span>
+            </a>
+
+            <a href="{% url 'student_attendance' %}">
+                <i class="fas fa-calendar-check"></i>
+                <span>Attendance</span>
+            </a>
+
+            <a href="#">
+                <i class="fas fa-file-lines"></i>
+                <span>Manage Results</span>
+            </a>
+
+            <a href="#">
+                <i class="fas fa-calendar-days"></i>
+                <span>Timetable</span>
+            </a>
+
+            <a href="#">
+                <i class="fas fa-user"></i>
+                <span>My Profile</span>
+            </a>
+
+        </nav>
+
+        <div class="sidebar-bottom">
+            <a href="{% url 'logout' %}">
+                <i class="fas fa-right-from-bracket"></i>
+                <span>Logout</span>
+            </a>
+        </div>
+
+    </aside>
+
+
+    <!-- MAIN CONTENT -->
+    <main class="main-content">
+
+        <!-- TOPBAR -->
+        <header class="topbar">
+
+            <div>
+                <h2>My Students</h2>
+                <p>Manage and view students in your assigned class</p>
+            </div>
+
+            <div class="teacher-profile">
+                <div class="profile-icon">
+                    <i class="fas fa-user"></i>
+                </div>
+
+                <div>
+                    <h4>{{ request.user.username }}</h4>
+                    <span>Teacher</span>
+                </div>
+            </div>
+
+        </header>
+
+
+        <!-- PAGE HEADER -->
+        <section class="page-header">
+
+            <div>
+                <h1>Student Directory</h1>
+                <p>Here are the students assigned to your class.</p>
+            </div>
+
+            <div class="class-badge">
+                <i class="fas fa-chalkboard"></i>
+                <span>{{ request.user.teacher.assigned_class.name|default:"No class assigned" }}</span>
+            </div>
+
+        </section>
+
+
+        <!-- SUMMARY -->
+        <section class="summary-section">
+
+            <div class="summary-card">
+                <div class="summary-icon">
+                    <i class="fas fa-users"></i>
+                </div>
+
+                <div>
+                    <span>Total Students</span>
+                    <h2>{{ students|length }}</h2>
+                </div>
+            </div>
+
+        </section>
+
+
+        <!-- STUDENT TABLE -->
+        <section class="content-section">
+
+            <div class="section-heading">
+                <div>
+                    <h2>Students List</h2>
+                    <p>Student records for your assigned class</p>
+                </div>
+            </div>
+
+
+            {% if students %}
+
+            <div class="table-container">
+
+                <table>
+
+                    <thead>
+                        <tr>
+                            <th>S/N</th>
+                            <th>Student ID</th>
+                            <th>Full Name</th>
+                            <th>Email Address</th>
+                            <th>Gender</th>
+                            <th>Class</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+
+                        {% for student in students %}
+
+                        <tr>
+                            <td>{{ forloop.counter }}</td>
+
+                            <td>
+                                <span class="student-id">
+                                    {{ student.student_id }}
+                                </span>
+                            </td>
+
+                            <td>
+                                <div class="student-name">
+                                    <div class="student-avatar">
+                                        {{ student.firstName|first|upper }}
+                                    </div>
+
+                                    <div>
+                                        <strong>
+                                            {{ student.surname }}
+                                            {{ student.firstName }}
+                                            {{ student.middleName }}
+                                        </strong>
+                                    </div>
+                                </div>
+                            </td>
+
+                            <td>{{ student.email }}</td>
+
+                            <td>
+                                <span class="gender-badge">
+                                    {{ student.gender }}
+                                </span>
+                            </td>
+
+                            <td>
+                                <span class="class-badge small">
+                                    {{ student.assigned_class.name|default:"Not assigned" }}
+                                </span>
+                            </td>
+
+                        </tr>
+
+                        {% endfor %}
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+            {% else %}
+
+            <div class="empty-state">
+
+                <div class="empty-icon">
+                    <i class="fas fa-user-graduate"></i>
+                </div>
+
+                <h3>No Students Found</h3>
+
+                <p>
+                    There are currently no students registered
+                    in your assigned class.
+                </p>
+
+            </div>
+
+            {% endif %}
+
+        </section>
+
+
+        <!-- FOOTER -->
+        <footer>
+            <p>&copy; 2026 EduManage. All rights reserved.</p>
+        </footer>
+
+    </main>
+
+</div>
+
+</body>
+</html>

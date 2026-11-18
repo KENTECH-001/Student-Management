@@ -85,44 +85,59 @@ class StudentLogin(models.Model):
 
 
 
-class Junior_subjects(models.Model):
-    mathematics=models.IntegerField(blank=False)
-    English=models.IntegerField(blank=False)
-    Basic_Science=models.IntegerField(blank=False)
-    Pre_Vocation=models.IntegerField(blank=False)
-    Yoruba=models.IntegerField(blank=False)
-    Digital_Litiracy=models.IntegerField(blank=False)
-    History=models.IntegerField(blank=False)
-    National_values=models.IntegerField(blank=False)
-    Reiigious_studies=models.IntegerField(blank=False)
-    Business_studies=models.IntegerField(blank=False)
-    Creative_arts=models.IntegerField(blank=False)
+class Subject(models.Model):
+    name = models.CharField(max_length=100)
+    school_level = models.CharField(
+        max_length=10,
+        choices=[
+            ('Junior', 'Junior'),
+            ('Senior', 'Senior')
+        ]
+    )
+
+    def __str__(self):
+        return self.name
+
+
+class StudentResult(models.Model):
+    TERM_CHOICES = [
+        ('First Term', 'First Term'),
+        ('Second Term', 'Second Term'),
+        ('Third Term', 'Third Term'),
+    ]
+
+    student = models.ForeignKey(
+        Student,
+        on_delete=models.CASCADE,
+        related_name='results'
+    )
+
+    subject = models.ForeignKey(
+        Subject,
+        on_delete=models.PROTECT
+    )
+
+    test = models.PositiveIntegerField()
+    exam = models.PositiveIntegerField()
+    total = models.PositiveIntegerField()
+    grade = models.CharField(max_length=2)
+
+    session = models.CharField(max_length=9)
+    term = models.CharField(
+        max_length=20,
+        choices=TERM_CHOICES
+    )
 
     class Meta:
-        db_table = 'junior_subjects'
+        constraints = [
+            models.UniqueConstraint(
+                fields=['student', 'subject', 'session', 'term'],
+                name='unique_student_subject_result'
+            )
+        ]
 
-
-class Senior_subjects(models.Model):
-    mathematics=models.IntegerField(blank=False)
-    english=models.IntegerField(blank=False)
-    physics=models.IntegerField(blank=False)
-    chemistry=models.IntegerField(blank=False)
-    biology=models.IntegerField(blank=False)
-    agric_science=models.IntegerField(blank=False)
-    civic_education=models.IntegerField(blank=False)
-    economics=models.IntegerField(blank=False)
-    marketing=models.IntegerField(blank=False)
-    commerce=models.IntegerField(blank=False)
-    accounting=models.IntegerField(blank=False)
-    literature=models.IntegerField(blank=False)
-    government=models.IntegerField(blank=False)
-    data_processing=models.IntegerField(blank=False)
-    yoruba=models.IntegerField(blank=False)
-
-    class Meta:
-        db_table='senior_subjects'
-
-
+    def __str__(self):
+        return f'{self.student} - {self.subject} - {self.term}'
 
 class Student_attendance(models.Model):
     STATUS_CHOICES = [
