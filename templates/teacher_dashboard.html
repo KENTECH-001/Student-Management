@@ -86,7 +86,7 @@
                 </div>
 
                 <div>
-                    <h4>{{ request.user.username }}</h4>
+                    <h4>{{ teacher.user.username }}</h4>
                     <span>Teacher</span>
                 </div>
             </div>
@@ -98,7 +98,7 @@
         <section class="welcome-banner">
 
             <div>
-                <h1>Welcome Back, {{ request.user.username }}!</h1>
+                <h1>Welcome Back, {{ teacher.user.username }}!</h1>
 
                 <p>
                     Manage your students, monitor attendance
@@ -178,17 +178,17 @@
 
                 <div class="information-item">
                     <span>Teacher Name</span>
-                    <h4>{{ teacher.name }}</h4>
+                    <h4>{{ teacher.user.username }}</h4>
                 </div>
 
                 <div class="information-item">
                     <span>Email Address</span>
-                    <h4>{{ request.user.username }}</h4>
+                    <h4>{{ teacher.user.email }}</h4>
                 </div>
 
                 <div class="information-item">
                     <span>Username</span>
-                    <h4>{{ request.user.username }}</h4>
+                    <h4>{{ teacher.user.username }}</h4>
                 </div>
 
             </div>
