@@ -1,0 +1,122 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Results | EduManage</title>
+    <link rel="stylesheet" href="{% static 'student_view_results.css' %}">
+</head>
+<body>
+
+<div class="container">
+
+    <header class="page-header">
+        <div>
+            <h2>My Academic Results</h2>
+            <p>View your academic performance by session and term.</p>
+        </div>
+        <a href="{% url 'student_dashboard' %}" class="back-button">
+            Dashboard
+        </a>
+    </header>
+
+    <section class="student-info">
+        <h3>{{ student.firstName }} {{ student.surname }}</h3>
+        <p>Student ID: {{ student.student_id }}</p>
+        <p>Class: {{ student.assigned_class.name }}</p>
+    </section>
+
+    {% if messages %}
+        {% for message in messages %}
+            <div class="message">{{ message }}</div>
+        {% endfor %}
+    {% endif %}
+
+    <form method="GET" class="filter-form">
+
+        <div class="filter-group">
+            <label>Academic Session</label>
+            <select name="session">
+                <option value="">All Sessions</option>
+
+                {% for session in sessions %}
+                    <option value="{{ session }}"
+                        {% if selected_session == session %}selected{% endif %}>
+                        {{ session }}
+                    </option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="filter-group">
+            <label>Term</label>
+            <select name="term">
+                <option value="">All Terms</option>
+
+                {% for value, label in terms %}
+                    <option value="{{ value }}"
+                        {% if selected_term == value %}selected{% endif %}>
+                        {{ label }}
+                    </option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <button type="submit">View Results</button>
+
+    </form>
+
+    <section class="results-section">
+
+        <h3>Results Summary</h3>
+
+        {% if results %}
+            <div class="table-wrapper">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Subject</th>
+                            <th>Test / 40</th>
+                            <th>Exam / 60</th>
+                            <th>Total / 100</th>
+                            <th>Grade</th>
+                            <th>Session</th>
+                            <th>Term</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        {% for result in results %}
+                            <tr>
+                                <td>{{ result.subject.name }}</td>
+                                <td>{{ result.test }}</td>
+                                <td>{{ result.exam }}</td>
+                                <td>{{ result.total }}</td>
+                                <td>
+                                    <span class="grade grade-{{ result.grade }}">
+                                        {{ result.grade }}
+                                    </span>
+                                </td>
+                                <td>{{ result.session }}</td>
+                                <td>{{ result.term }}</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+
+        {% else %}
+            <div class="empty-state">
+                <h3>No results found</h3>
+                <p>Your results for the selected session or term are not available.</p>
+            </div>
+        {% endif %}
+
+    </section>
+
+</div>
+
+</body>
+</html>

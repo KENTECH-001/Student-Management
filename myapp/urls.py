@@ -37,6 +37,10 @@ urlpatterns = [
     path('choose_attendance', views.choose_attendance, name='choose_attendance'),
     path('my_students', views.my_students, name='my_students'),
     path('add_results', views.add_results, name='add_results'),
+    path('student_view_results',views.student_view_results,name='student_view_results'),
+    path('admin_view_results', views.admin_view_results, name='admin_view_results'),
+    path('teacher_view_results', views.teacher_view_results, name='teacher_view_results'),
+    
     # path('api/view/', views.view, name='view'),
     # path('api/create/', views.create_api, name='create_api'),
     # path('api/<int:id>/update/', views.update_api, name='update_api'),

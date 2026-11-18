@@ -841,8 +841,149 @@ def add_results(request):
 
 
 
+@login_required(login_url='login_student')
+def student_view_results(request):
+    if not hasattr(request.user, 'student_login'):
+        return redirect('role')
+
+    student = request.user.student_login.student
+
+    results = StudentResult.objects.filter(
+        student=student
+    ).select_related('subject').order_by(
+        '-session', 'term', 'subject__name'
+    )
+
+    sessions = StudentResult.objects.filter(
+        student=student
+    ).values_list(
+        'session', flat=True
+    ).distinct().order_by('-session')
+
+    selected_session = request.GET.get('session')
+    selected_term = request.GET.get('term')
+
+    if selected_session:
+        results = results.filter(session=selected_session)
+
+    if selected_term:
+        results = results.filter(term=selected_term)
+
+    return render(request, 'student_view_results.html', {
+        'results': results,
+        'sessions': sessions,
+        'selected_session': selected_session,
+        'selected_term': selected_term,
+        'student': student,
+        'terms': StudentResult.TERM_CHOICES
+    })
 
 
+
+@admin_required
+def admin_view_results(request):
+
+    results = StudentResult.objects.select_related(
+        'student',
+        'student__assigned_class',
+        'subject'
+    ).all().order_by(
+        '-session', 'term', 'student__surname'
+    )
+
+    classes = SchoolClass.objects.all().order_by('name')
+
+    sessions = StudentResult.objects.values_list(
+        'session', flat=True
+    ).distinct().order_by('-session')
+
+    selected_class = request.GET.get('class')
+    selected_student = request.GET.get('student')
+    selected_session = request.GET.get('session')
+    selected_term = request.GET.get('term')
+
+    if selected_class:
+        results = results.filter(
+            student__assigned_class__id=selected_class
+        )
+
+    if selected_student:
+        results = results.filter(
+            student__student_id=selected_student
+        )
+
+    if selected_session:
+        results = results.filter(session=selected_session)
+
+    if selected_term:
+        results = results.filter(term=selected_term)
+
+    students = Student.objects.all().order_by('surname', 'firstName')
+
+    return render(request, 'admin_view_results.html', {
+        'results': results,
+        'classes': classes,
+        'students': students,
+        'sessions': sessions,
+        'terms': StudentResult.TERM_CHOICES,
+        'selected_class': selected_class,
+        'selected_student': selected_student,
+        'selected_session': selected_session,
+        'selected_term': selected_term,
+    })
+
+
+
+
+@teacher_required
+def teacher_view_results(request):
+    teacher = request.user.teacher
+
+    if teacher.assigned_class is None:
+        messages.error(request, 'You have not been assigned a class.')
+        return redirect('teacher_dashboard')
+
+    students = Student.objects.filter(
+        assigned_class=teacher.assigned_class
+    )
+
+    results = StudentResult.objects.filter(
+        student__in=students
+    ).select_related(
+        'student', 'subject'
+    ).order_by(
+        '-session', 'term', 'student__surname'
+    )
+
+    sessions = results.values_list(
+        'session', flat=True
+    ).distinct().order_by('-session')
+
+    selected_student = request.GET.get('student')
+    selected_session = request.GET.get('session')
+    selected_term = request.GET.get('term')
+
+    if selected_student:
+        results = results.filter(
+            student__student_id=selected_student
+        )
+
+    if selected_session:
+        results = results.filter(session=selected_session)
+
+    if selected_term:
+        results = results.filter(term=selected_term)
+
+    return render(request, 'teacher_view_results.html', {
+        'results': results,
+        'students': students,
+        'sessions': sessions,
+        'terms': StudentResult.TERM_CHOICES,
+        'selected_student': selected_student,
+        'selected_session': selected_session,
+        'selected_term': selected_term,
+        'teacher': teacher
+    })
 
 
 
