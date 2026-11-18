@@ -98,7 +98,7 @@
         <section class="welcome-banner">
 
             <div>
-                <h1>Welcome Back, {{ teacher.name }}!</h1>
+                <h1>Welcome Back, {{ request.user.username }}!</h1>
 
                 <p>
                     Manage your students, monitor attendance
@@ -183,7 +183,7 @@
 
                 <div class="information-item">
                     <span>Email Address</span>
-                    <h4>{{ teacher.email }}</h4>
+                    <h4>{{ request.user.username }}</h4>
                 </div>
 
                 <div class="information-item">
