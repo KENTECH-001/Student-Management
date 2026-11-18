@@ -491,7 +491,7 @@ def teacher_dashboard(request):
     if not hasattr(request.user, 'teacher'):
         return redirect('role')
 
-    teacher = Teacher.objects.all().values()
+    teacher = request.user.teacher
 
     return render(
         request,
