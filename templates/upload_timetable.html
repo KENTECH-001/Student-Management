@@ -1,0 +1,160 @@
+
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Upload Timetable | EduManage</title>
+    <link rel="stylesheet" href="{% static 'upload_timetable.css' %}">
+</head>
+<body>
+
+<div class="container">
+
+    <header class="page-header">
+        <div>
+            <h2>Timetable Management</h2>
+            <p>Upload or replace class timetables.</p>
+        </div>
+
+        <a href="{% url 'admin_dashboard' %}" class="back-button">
+            Dashboard
+        </a>
+    </header>
+
+    {% if messages %}
+        {% for message in messages %}
+            <div class="message {{ message.tags }}">
+                {{ message }}
+            </div>
+        {% endfor %}
+    {% endif %}
+
+    <section class="upload-section">
+
+        <div class="section-heading">
+            <h3>Upload Class Timetable</h3>
+            <p>Select a class and upload its timetable image.</p>
+        </div>
+
+        <form method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+
+            <div class="form-group">
+                <label for="school_class">Select Class</label>
+
+                <select name="school_class" id="school_class" required>
+                    <option value="">Choose a class</option>
+
+                    {% for school_class in classes %}
+                        <option value="{{ school_class.id }}">
+                            {{ school_class.name }}
+                        </option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="image">Timetable Image</label>
+
+                <div class="upload-box">
+                    <input
+                        type="file"
+                        name="image"
+                        id="image"
+                        accept="image/jpeg,image/png,image/webp"
+                        required
+                    >
+
+                    <p>Choose a timetable image</p>
+                    <small>Supported formats: JPG, PNG and WebP</small>
+                </div>
+            </div>
+
+            <div class="preview-section" id="preview-section">
+                <p>Image Preview</p>
+                <img id="image-preview" src="" alt="Timetable preview">
+            </div>
+
+            <button type="submit" class="upload-button">
+                Upload Timetable
+            </button>
+
+        </form>
+    </section>
+
+    <section class="existing-section">
+        <div class="section-heading">
+            <h3>Uploaded Timetables</h3>
+            <p>Existing timetables for each class.</p>
+        </div>
+
+        {% if timetables %}
+            <div class="timetable-grid">
+
+                {% for timetable in timetables %}
+                    <div class="timetable-card">
+
+                        <div class="card-image">
+                            <img
+                                src="{{ timetable.image.url }}"
+                                alt="{{ timetable.school_class.name }} timetable"
+                            >
+                        </div>
+
+                        <div class="card-content">
+                            <h4>{{ timetable.school_class.name }}</h4>
+
+                            <p>
+                                Last updated:
+                                {{ timetable.uploaded_at|date:"d M Y, h:i A" }}
+                            </p>
+
+                            <a
+                                href="{{ timetable.image.url }}"
+                                target="_blank"
+                                rel="noopener"
+                                class="view-button"
+                            >
+                                View Timetable
+                            </a>
+                        </div>
+
+                    </div>
+                {% endfor %}
+
+            </div>
+
+        {% else %}
+            <div class="empty-state">
+                <h3>No timetables uploaded yet</h3>
+                <p>Uploaded class timetables will appear here.</p>
+            </div>
+        {% endif %}
+
+    </section>
+
+</div>
+
+<script>
+    const imageInput = document.getElementById('image');
+    const previewSection = document.getElementById('preview-section');
+    const imagePreview = document.getElementById('image-preview');
+
+    imageInput.addEventListener('change', function () {
+        const file = this.files[0];
+
+        if (file) {
+            imagePreview.src = URL.createObjectURL(file);
+            previewSection.style.display = 'block';
+        } else {
+            imagePreview.src = '';
+            previewSection.style.display = 'none';
+        }
+    });
+</script>
+
+</body>
+</html>

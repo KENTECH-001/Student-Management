@@ -40,6 +40,9 @@ urlpatterns = [
     path('student_view_results',views.student_view_results,name='student_view_results'),
     path('admin_view_results', views.admin_view_results, name='admin_view_results'),
     path('teacher_view_results', views.teacher_view_results, name='teacher_view_results'),
+    path('upload_timetable', views.upload_timetable, name='upload_timetable'),
+    path('student_timetable', views.student_timetable, name='student_timetable'),
+    path('teacher_timetable', views.teacher_timetable, name='teacher_timetable'),
     
     # path('api/view/', views.view, name='view'),
     # path('api/create/', views.create_api, name='create_api'),

@@ -167,6 +167,21 @@ class Student_attendance(models.Model):
 
     
 
+class Timetable(models.Model):
+    school_class = models.OneToOneField(
+        SchoolClass,
+        on_delete=models.CASCADE,
+        related_name='timetable'
+    )
+
+    image = models.ImageField(
+        upload_to='timetables/'
+    )
+
+    uploaded_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return f'{self.school_class.name} Timetable'
 
 
 

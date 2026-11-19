@@ -1,0 +1,59 @@
+
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Timetable | EduManage</title>
+    <link rel="stylesheet" href="{% static 'timetable.css' %}">
+</head>
+<body>
+
+<div class="container">
+
+    <header class="page-header">
+        <div>
+            <h2>My Class Timetable</h2>
+            <p>View your weekly academic timetable.</p>
+        </div>
+
+        <a href="{% url 'student_dashboard' %}" class="back-button">
+            Dashboard
+        </a>
+    </header>
+
+    <section class="class-info">
+        <h3>{{ student.assigned_class.name }}</h3>
+        <p>Student: {{ student.surname }} {{ student.firstName }}</p>
+    </section>
+
+    <section class="timetable-section">
+
+        {% if timetable %}
+            <div class="section-heading">
+                <h3>{{ student.assigned_class.name }} Timetable</h3>
+                <a href="{{ timetable.image.url }}" target="_blank" rel="noopener">
+                    Open Full Image
+                </a>
+            </div>
+
+            <div class="image-container">
+                <img src="{{ timetable.image.url }}"
+                     alt="{{ student.assigned_class.name }} timetable">
+            </div>
+
+        {% else %}
+            <div class="empty-state">
+                <h3>Timetable Not Available</h3>
+                <p>Your class timetable has not been uploaded yet.</p>
+            </div>
+        {% endif %}
+
+    </section>
+
+</div>
+
+</body>
+</html>

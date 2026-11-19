@@ -988,6 +988,94 @@ def teacher_view_results(request):
 
 
 
+@admin_required
+def upload_timetable(request):
+
+    classes = SchoolClass.objects.all().order_by('name')
+
+    if request.method == 'POST':
+        class_id = request.POST.get('school_class')
+        timetable_image = request.FILES.get('image')
+
+        school_class = get_object_or_404(
+            SchoolClass,
+            id=class_id
+        )
+
+        if not timetable_image:
+            messages.error(request, 'Please select a timetable image.')
+            return redirect('upload_timetable')
+
+        timetable, created = Timetable.objects.get_or_create(
+            school_class=school_class,
+            defaults={'image': timetable_image}
+        )
+
+        if not created:
+            timetable.image = timetable_image
+            timetable.save()
+
+        messages.success(
+            request,
+            f'{school_class.name} timetable uploaded successfully!'
+        )
+
+        return redirect('upload_timetable')
+
+    timetables = Timetable.objects.select_related(
+        'school_class'
+    ).all()
+
+    return render(request, 'upload_timetable.html', {
+        'classes': classes,
+        'timetables': timetables
+    })
+
+
+
+
+@teacher_required
+def teacher_timetable(request):
+
+    teacher = request.user.teacher
+
+    if teacher.assigned_class is None:
+        messages.error(request, 'You have not been assigned a class.')
+        return redirect('teacher_dashboard')
+
+    timetable = Timetable.objects.filter(
+        school_class=teacher.assigned_class
+    ).first()
+
+    return render(request, 'teacher_timetable.html', {
+        'teacher': teacher,
+        'timetable': timetable
+    })
+
+
+
+
+@login_required(login_url='login_student')
+def student_timetable(request):
+
+    if not hasattr(request.user, 'student_login'):
+        return redirect('role')
+
+    student = request.user.student_login.student
+
+    timetable = Timetable.objects.filter(
+        school_class=student.assigned_class
+    ).first()
+
+    return render(request, 'student_timetable.html', {
+        'student': student,
+        'timetable': timetable
+    })
+
+
+
+
+
 # @api_view (['GET'])
 # @permission_classes([IsAuthenticated])
 # def view(request):

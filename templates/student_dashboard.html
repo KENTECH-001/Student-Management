@@ -31,18 +31,13 @@
                     <i class="fas fa-user"></i>
                     My Profile
                 </a>
-
-                <a href="#">
-                    <i class="fas fa-calendar-check"></i>
-                    Attendance
-                </a>
-
-                <a href="#">
+                
+                <a href="{% url 'student_view_results' %}">
                     <i class="fas fa-graduation-cap"></i>
                     My Results
                 </a>
 
-                <a href="#">
+                <a href="{% url 'student_timetable' %}">
                     <i class="fas fa-calendar-days"></i>
                     Timetable
                 </a>
@@ -94,17 +89,6 @@
                 </div>
 
                 <div class="card">
-                    <div class="card-icon green">
-                        <i class="fas fa-calendar-check"></i>
-                    </div>
-                    <div>
-                        <h3>Attendance</h3>
-                        <p>Check your attendance records</p>
-                        <a href="#">View Attendance</a>
-                    </div>
-                </div>
-
-                <div class="card">
                     <div class="card-icon orange">
                         <i class="fas fa-graduation-cap"></i>
                     </div>
@@ -122,7 +106,7 @@
                     <div>
                         <h3>Timetable</h3>
                         <p>Check your class timetable</p>
-                        <a href="#">View Timetable</a>
+                        <a href="{% url 'student_timetable' %}">View Timetable</a>
                     </div>
                 </div>
 
