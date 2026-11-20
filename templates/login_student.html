@@ -1,48 +1,189 @@
-
+```html
 {% load static %}
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>School Login</title>
+
+    <title>Student Login | EduManage</title>
+
     <link rel="stylesheet" href="{% static 'login_student.css' %}">
 </head>
-<body>
-    <main class="login-page">
-        <section class="login-card">
 
-            <div>
-                <h1>School Login</h1>
+<body>
+
+    <div class="login-container">
+
+        <!-- LEFT SECTION -->
+        <div class="login-left">
+
+            <div class="brand">
+                <div class="brand-icon">E</div>
+                <h2>EduManage</h2>
             </div>
 
-            <p class="subtitle">Login To The School Account As A Student:</p>
+            <div class="welcome-text">
 
-            {% if messages %}
-                <div class="message-box">
+                <span class="welcome-label">STUDENT PORTAL</span>
+
+                <h1>Welcome<br>Back!</h1>
+
+                <p>
+                    Log in to access your academic dashboard,
+                    check your results, view your timetable,
+                    and stay updated with your school activities.
+                </p>
+
+            </div>
+
+            <div class="left-footer">
+                Learn. Grow. Achieve.
+            </div>
+
+        </div>
+
+
+        <!-- RIGHT SECTION -->
+        <div class="login-right">
+
+            <div class="form-wrapper">
+
+                <!-- MOBILE BRAND -->
+                <div class="mobile-brand">
+                    <div class="brand-icon">E</div>
+                    <h2>EduManage</h2>
+                </div>
+
+
+                <div class="form-heading">
+                    <h2>Student Login</h2>
+                    <p>Enter your details to access your account.</p>
+                </div>
+
+
+                <!-- DJANGO MESSAGES -->
+                {% if messages %}
                     {% for message in messages %}
-                        <p>{{ message }}</p>
+                        <div class="message {{ message.tags }}">
+                            {{ message }}
+                        </div>
                     {% endfor %}
-                </div>
-            {% endif %}
+                {% endif %}
 
-            <form action="{% url 'login_student' %}" method="POST">
-                {% csrf_token %}
 
-                <div class="field-group">
-                    <label for="username">Student ID :</label>
-                    <input id="username" type="text" name="username"
-                           placeholder="Enter your username" required>
+                <!-- LOGIN FORM -->
+                <form method="POST">
+
+                    {% csrf_token %}
+
+                    <div class="form-group">
+
+                        <label for="student_id">Student ID</label>
+
+                        <input
+                            type="text"
+                            id="student_id"
+                            name="student_id"
+                            placeholder="Enter your Student ID"
+                            autocomplete="username"
+                            required
+                        >
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label for="password">Password</label>
+
+                        <div class="password-wrapper">
+
+                            <input
+                                type="password"
+                                id="password"
+                                name="password"
+                                placeholder="Enter your password"
+                                autocomplete="current-password"
+                                required
+                            >
+
+                            <button
+                                type="button"
+                                class="toggle-password"
+                                onclick="togglePassword()"
+                            >
+                                Show
+                            </button>
+
+                        </div>
+
+                    </div>
+
+
+                    <button type="submit" class="login-button">
+                        Login to Dashboard
+                    </button>
+
+                </form>
+
+
+                <!-- REGISTRATION LINK -->
+                <div class="register-section">
+
+                    <p>
+                        Don't have an account?
+                        <a href="{% url 'confirm_student_id' %}">
+                            Register here
+                        </a>
+                    </p>
+
                 </div>
 
-                <div class="field-group">
-                    <label for="password">Password :</label>
-                    <input id="password" type="password" name="password"
-                           placeholder="Enter your password" required>
+
+                <!-- HELP -->
+                <p class="help-text">
+                    Having trouble logging in?
+                    Contact your school administrator.
+                </p>
+
+
+                <div class="form-footer">
+                    © {% now "Y" %} EduManage. All rights reserved.
                 </div>
-                <button type="submit" class="submit-btn">Login</button>
-            </form>
-        </section>
-    </main>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- PASSWORD VISIBILITY -->
+    <script>
+
+        function togglePassword() {
+
+            const password = document.getElementById("password");
+            const button = document.querySelector(".toggle-password");
+
+            if (password.type === "password") {
+
+                password.type = "text";
+                button.textContent = "Hide";
+
+            } else {
+
+                password.type = "password";
+                button.textContent = "Show";
+
+            }
+
+        }
+
+    </script>
+
 </body>
 </html>
+```
