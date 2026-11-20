@@ -43,7 +43,10 @@ urlpatterns = [
     path('upload_timetable', views.upload_timetable, name='upload_timetable'),
     path('student_timetable', views.student_timetable, name='student_timetable'),
     path('teacher_timetable', views.teacher_timetable, name='teacher_timetable'),
-    
+    path('admin_settings', views.admin_settings, name='admin_settings'),
+    path('xtudent_profile', views.student_profile, name='student_profile'),
+    path('teacher_profile', views.teacher_profile, name='teacher_profile')
+
     # path('api/view/', views.view, name='view'),
     # path('api/create/', views.create_api, name='create_api'),
     # path('api/<int:id>/update/', views.update_api, name='update_api'),

@@ -69,7 +69,7 @@
 
             <!-- Welcome Section -->
             <section class="welcome-section">
-                <h1>Welcome Back!</h1>
+                <h1>Welcome Back {{student.firstName}}{{student.surname}}!</h1>
                 <p>Manage your academic activities from your dashboard.</p>
             </section>
 
@@ -84,7 +84,7 @@
                     <div>
                         <h3>My Profile</h3>
                         <p>View your personal information</p>
-                        <a href="#">View Profile</a>
+                        <a href="{% student_profile %}">View Profile</a>
                     </div>
                 </div>
 
@@ -120,22 +120,22 @@
                 <div class="details-grid">
                     <div>
                         <span>Student ID</span>
-                        <p>STU001</p>
+                        <p>{{student.student-id}}</p>
                     </div>
 
                     <div>
                         <span>Student Name</span>
-                        <p>Student Name</p>
+                        <p>{{student.firstName}}{{student.surname}}{{student.middleName}}</p>
                     </div>
 
                     <div>
                         <span>Class</span>
-                        <p>100L</p>
+                        <p>{{student.assigned_class}}</p>
                     </div>
 
                     <div>
                         <span>Email Address</span>
-                        <p>student@example.com</p>
+                        <p>{{student.email}}</p>
                     </div>
                 </div>
             </section>

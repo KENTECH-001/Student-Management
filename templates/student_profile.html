@@ -1,0 +1,81 @@
+ 
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Profile | EduManage</title>
+    <link rel="stylesheet" href="{% static 'student_profile.css' %}">
+</head>
+<body>
+
+    <div class="profile-container">
+        <header class="profile-header">
+            <div>
+                <h1>My Profile</h1>
+                <p>View your personal student information</p>
+            </div>
+            <a href="{% url 'student_dashboard' %}" class="back-btn">Back to Dashboard</a>
+        </header>
+
+        <section class="profile-card">
+            <div class="profile-avatar">
+                {{ student.firstName|first|upper }}{{ student.surname|first|upper }}
+            </div>
+
+            <h2>{{ student.firstName }} {{ student.surname }}</h2>
+            <p class="student-label">Student</p>
+
+            <div class="profile-details">
+                <div class="detail">
+                    <span>Student ID</span>
+                    <strong>{{ student.student_id }}</strong>
+                </div>
+
+                <div class="detail">
+                    <span>First Name</span>
+                    <strong>{{ student.firstName }}</strong>
+                </div>
+
+                <div class="detail">
+                    <span>Surname</span>
+                    <strong>{{ student.surname }}</strong>
+                </div>
+
+                <div class="detail">
+                    <span>Middle Name</span>
+                    <strong>{{ student.middleName|default:"Not provided" }}</strong>
+                </div>
+
+                <div class="detail">
+                    <span>Email Address</span>
+                    <strong>{{ student.email }}</strong>
+                </div>
+
+                <div class="detail">
+                    <span>Gender</span>
+                    <strong>{{ student.gender }}</strong>
+                </div>
+
+                <div class="detail">
+                    <span>Assigned Class</span>
+                    <strong>
+                        {{ student.assigned_class|default:"Not assigned" }}
+                    </strong>
+                </div>
+
+                <div class="detail">
+                    <span>Registration Date</span>
+                    <strong>{{ student.registrationDate|date:"F d, Y" }}</strong>
+                </div>
+            </div>
+        </section>
+
+        <p class="readonly-note">
+            Your profile information is managed by the school administrator.
+        </p>
+    </div>
+
+</body>
+</html>

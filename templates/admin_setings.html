@@ -1,0 +1,118 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>School Settings | EduManage</title>
+    <link rel="stylesheet" href="{% static 'admin_settings.css' %}">
+</head>
+<body>
+
+<div class="settings-container">
+
+    <header class="settings-header">
+        <div>
+            <h1>School Settings</h1>
+            <p>Manage your school's information and academic settings.</p>
+        </div>
+
+        <a href="{% url 'admin_dashboard' %}" class="back-btn">
+            Back to Dashboard
+        </a>
+    </header>
+
+    {% if messages %}
+        {% for message in messages %}
+            <div class="message {{ message.tags }}">
+                {{ message }}
+            </div>
+        {% endfor %}
+    {% endif %}
+
+    <form method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+
+        <section class="settings-card">
+            <h2>School Information</h2>
+
+            <div class="form-group">
+                <label>School Name</label>
+                <input type="text" name="school_name"
+                       value="{{ settings.school_name }}" required>
+            </div>
+
+            <div class="form-group">
+                <label>School Email</label>
+                <input type="email" name="email"
+                       value="{{ settings.email }}">
+            </div>
+
+            <div class="form-group">
+                <label>Phone Number</label>
+                <input type="text" name="phone"
+                       value="{{ settings.phone }}">
+            </div>
+
+            <div class="form-group">
+                <label>School Address</label>
+                <textarea name="address" rows="3">{{ settings.address }}</textarea>
+            </div>
+
+            <div class="form-group">
+                <label>School Logo</label>
+
+                {% if settings.school_logo %}
+                    <div class="current-logo">
+                        <img src="{{ settings.school_logo.url }}" alt="School Logo">
+                        <p>Current school logo</p>
+                    </div>
+                {% endif %}
+
+                <input type="file" name="school_logo"
+                       accept="image/png,image/jpeg,image/webp">
+            </div>
+        </section>
+
+        <section class="settings-card">
+            <h2>Academic Settings</h2>
+
+            <div class="form-group">
+                <label>Current Academic Session</label>
+                <input type="text" name="current_session"
+                       value="{{ settings.current_session }}"
+                       pattern="[0-9]{4}/[0-9]{4}"
+                       placeholder="2026/2027" required>
+            </div>
+
+            <div class="form-group">
+                <label>Current Term</label>
+                <select name="current_term" required>
+                    <option value="First Term"
+                        {% if settings.current_term == 'First Term' %}selected{% endif %}>
+                        First Term
+                    </option>
+
+                    <option value="Second Term"
+                        {% if settings.current_term == 'Second Term' %}selected{% endif %}>
+                        Second Term
+                    </option>
+
+                    <option value="Third Term"
+                        {% if settings.current_term == 'Third Term' %}selected{% endif %}>
+                        Third Term
+                    </option>
+                </select>
+            </div>
+        </section>
+
+        <button type="submit" class="save-btn">
+            Save Settings
+        </button>
+
+    </form>
+
+</div>
+
+</body>
+</html>

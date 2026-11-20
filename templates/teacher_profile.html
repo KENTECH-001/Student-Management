@@ -1,0 +1,77 @@
+
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Profile | EduManage</title>
+    <link rel="stylesheet" href="{% static 'student_profile.css' %}">
+</head>
+<body>
+
+    <div class="profile-container">
+        <header class="profile-header">
+            <div>
+                <h1>My Profile</h1>
+                <p>View your personal teacher information</p>
+            </div>
+
+            <a href="{% url 'teacher_dashboard' %}" class="back-btn">
+                Back to Dashboard
+            </a>
+        </header>
+
+        <section class="profile-card">
+            <div class="profile-avatar">
+                {{ teacher.user.first_name|first|upper }}{{ teacher.user.last_name|first|upper }}
+            </div>
+
+            <h2>
+                {{ teacher.user.first_name }} {{ teacher.user.last_name }}
+            </h2>
+
+            <p class="teacher-label">Teacher</p>
+
+            <div class="profile-details">
+
+                <div class="detail">
+                    <span>Username</span>
+                    <strong>{{ teacher.user.username }}</strong>
+                </div>
+
+                <div class="detail">
+                    <span>First Name</span>
+                    <strong>{{ teacher.user.first_name }}</strong>
+                </div>
+
+                <div class="detail">
+                    <span>Last Name</span>
+                    <strong>{{ teacher.user.last_name }}</strong>
+                </div>
+
+                <div class="detail">
+                    <span>Email Address</span>
+                    <strong>{{ teacher.user.email }}</strong>
+                </div>
+
+                <div class="detail">
+                    <span>Gender</span>
+                    <strong>{{ teacher.gender|default:"Not provided" }}</strong>
+                </div>
+
+                <div class="detail">
+                    <span>Assigned Class</span>
+                    <strong>{{ teacher.assigned_class|default:"Not assigned" }}</strong>
+                </div>
+
+            </div>
+        </section>
+
+        <p class="readonly-note">
+            Your profile information is managed by the school administrator.
+        </p>
+    </div>
+
+</body>
+</html>

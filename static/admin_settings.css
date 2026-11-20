@@ -1,0 +1,156 @@
+{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background: #f3f6fb;
+    color: #263449;
+}
+
+.settings-container {
+    width: 90%;
+    max-width: 950px;
+    margin: 45px auto;
+}
+
+.settings-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 20px;
+    margin-bottom: 30px;
+}
+
+.settings-header h1 {
+    color: #172d50;
+    margin-bottom: 8px;
+}
+
+.settings-header p {
+    color: #718096;
+}
+
+.back-btn {
+    text-decoration: none;
+    background: #173f73;
+    color: white;
+    padding: 12px 18px;
+    border-radius: 7px;
+}
+
+.settings-card {
+    background: white;
+    padding: 30px;
+    border-radius: 12px;
+    margin-bottom: 25px;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
+}
+
+.settings-card h2 {
+    color: #173f73;
+    font-size: 20px;
+    margin-bottom: 25px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid #e7edf5;
+}
+
+.form-group {
+    margin-bottom: 22px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 9px;
+    font-weight: 600;
+    font-size: 14px;
+}
+
+.form-group input,
+.form-group textarea,
+.form-group select {
+    width: 100%;
+    padding: 13px;
+    border: 1px solid #dce3ed;
+    border-radius: 7px;
+    font-size: 14px;
+    outline: none;
+    background: #fff;
+}
+
+.form-group input:focus,
+.form-group textarea:focus,
+.form-group select:focus {
+    border-color: #2463a6;
+}
+
+.form-group textarea {
+    resize: vertical;
+}
+
+.current-logo {
+    margin-bottom: 15px;
+}
+
+.current-logo img {
+    width: 110px;
+    height: 110px;
+    object-fit: contain;
+    border: 1px solid #e7edf5;
+    border-radius: 8px;
+    padding: 8px;
+}
+
+.current-logo p {
+    color: #718096;
+    font-size: 12px;
+    margin-top: 5px;
+}
+
+.save-btn {
+    border: none;
+    background: #173f73;
+    color: white;
+    padding: 14px 28px;
+    border-radius: 7px;
+    font-size: 15px;
+    cursor: pointer;
+}
+
+.save-btn:hover {
+    background: #102d53;
+}
+
+.message {
+    padding: 13px;
+    margin-bottom: 18px;
+    border-radius: 7px;
+    background: #e7f5ec;
+    color: #216b3a;
+}
+
+.message.error {
+    background: #fdeaea;
+    color: #a12626;
+}
+
+@media (max-width: 600px) {
+    .settings-container {
+        margin: 25px auto;
+    }
+
+    .settings-header {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .settings-card {
+        padding: 20px;
+    }
+
+    .save-btn {
+        width: 100%;
+    }
+}

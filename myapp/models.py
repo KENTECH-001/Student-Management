@@ -186,3 +186,28 @@ class Timetable(models.Model):
 
 
     
+
+class SchoolSettings(models.Model):
+    school_name = models.CharField(max_length=200)
+    school_logo = models.ImageField(
+        upload_to='school_logo/',
+        blank=True,
+        null=True
+    )
+    email = models.EmailField(blank=True)
+    phone = models.CharField(max_length=20, blank=True)
+    address = models.TextField(blank=True)
+
+    current_session = models.CharField(max_length=9)
+
+    current_term = models.CharField(
+        max_length=20,
+        choices=[
+            ('First Term', 'First Term'),
+            ('Second Term', 'Second Term'),
+            ('Third Term', 'Third Term')
+        ]
+    )
+
+    def __str__(self):
+        return self.school_name

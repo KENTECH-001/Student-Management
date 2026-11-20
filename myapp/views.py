@@ -4,7 +4,7 @@ from django.contrib import messages, auth
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib import messages, auth
 from django.contrib.auth.decorators import login_required, user_passes_test
-from .models import Student, Teacher, Student_attendance, StudentLogin, SchoolClass, Subject, StudentResult
+from .models import Student, Teacher, Student_attendance, StudentLogin, SchoolClass, Subject, StudentResult, Timetable, SchoolSettings
 from django.views.decorators.cache import never_cache
 from rest_framework.decorators import api_view, permission_classes
 from .serializers import StudentSerializer
@@ -76,6 +76,18 @@ def teacher_required(view_func):
     return user_passes_test(
         is_teacher, login_url='login_teacher'
     )(view_func)
+
+
+
+def is_student(user):
+    return user.is_authenticated and hasattr(user, 'student_login')
+
+
+
+def student_required(view_func):
+    return user_passes_test(
+        is_student,
+        login_url='confirm_student_id')(view_func)
 
 
 
@@ -255,6 +267,7 @@ def delete_teacher(request):
     return redirect('admin_dashboard')
 
 
+
 def confirm_student_id(request):
     if request.method == 'POST':
         student_id = request.POST.get('student_id')
@@ -282,6 +295,7 @@ def confirm_student_id(request):
 
 
 
+
 def test_mail(request, student):
     email = student.email
 
@@ -300,6 +314,7 @@ def test_mail(request, student):
         [email],
         fail_silently=False
     )
+
 
 
 
@@ -330,6 +345,7 @@ def verify_student(request):
         return redirect('verify_student')
 
     return render(request, 'verify_student.html')
+
 
 
 def register_student(request):
@@ -406,6 +422,7 @@ def login_student(request):
     return render(request, 'login_student.html')
 
 
+
 @admin_required
 @user_passes_test(is_admin)
 def new_student(request):
@@ -443,6 +460,7 @@ def new_student(request):
 
 
 
+
 def login_teacher(request):
     if request.method == 'POST':
         username = request.POST.get('username')
@@ -471,7 +489,8 @@ def login_teacher(request):
 
 
 
-@login_required(login_url='login_student')
+
+@student_required
 def student_dashboard(request):
     if not hasattr(request.user, 'student_login'):
         return redirect('role')
@@ -486,7 +505,7 @@ def student_dashboard(request):
 
 
 
-@login_required(login_url='login_teacher')
+@teacher_required
 def teacher_dashboard(request):
     if not hasattr(request.user, 'teacher'):
         return redirect('role')
@@ -720,7 +739,8 @@ def choose_attendance(request):
 
 
 
-@login_required(login_url='login_teacher')
+
+@teacher_required
 def my_students(request):
 
     if not hasattr(request.user, 'teacher'):
@@ -742,7 +762,7 @@ def my_students(request):
 
 
 
-@login_required(login_url='login_teacher')
+@teacher_required
 def add_results(request):
     teacher = request.user.teacher
 
@@ -841,7 +861,7 @@ def add_results(request):
 
 
 
-@login_required(login_url='login_student')
+@student_required
 def student_view_results(request):
     if not hasattr(request.user, 'student_login'):
         return redirect('role')
@@ -1055,7 +1075,7 @@ def teacher_timetable(request):
 
 
 
-@login_required(login_url='login_student')
+@student_required
 def student_timetable(request):
 
     if not hasattr(request.user, 'student_login'):
@@ -1071,6 +1091,74 @@ def student_timetable(request):
         'student': student,
         'timetable': timetable
     })
+
+
+
+@teacher_required
+def teacher_profile(request):
+    teacher = request.user.teacher
+
+    return render(request, 'teacher_profile.html', {
+        'teacher': teacher
+    })
+
+
+
+
+@student_required
+def student_profile(request):
+
+    if not hasattr(request.user, 'student_login'):
+        return redirect('role')
+
+    student = request.user.student_login.student
+
+    return render(request, 'student_profile.html', {
+        'student': student
+    })
+
+
+
+@admin_required
+def admin_settings(request):
+    settings, created = SchoolSettings.objects.get_or_create(
+        id=1,
+        defaults={
+            'school_name': 'My School',
+            'current_session': '2026/2027',
+            'current_term': 'First Term'
+        }
+    )
+
+    if request.method == 'POST':
+
+        settings.school_name = request.POST.get('school_name')
+        settings.email = request.POST.get('email')
+        settings.phone = request.POST.get('phone')
+        settings.address = request.POST.get('address')
+        settings.current_session = request.POST.get('current_session')
+        settings.current_term = request.POST.get('current_term')
+
+        if request.FILES.get('school_logo'):
+            settings.school_logo = request.FILES.get('school_logo')
+
+        settings.save()
+
+        messages.success(request, 'School settings updated successfully!')
+        return redirect('admin_settings')
+
+    return render(request, 'admin_settings.html', {
+        'settings': settings
+    })
+
+
+
+
+# @student_required
+# def current_student_data(request):
+#     current_student=request.user.student_login.student
+#     return render(request, 'student_dashboard.html', {'student':current_student})
+
 
 
 
