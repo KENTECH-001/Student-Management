@@ -1,23 +1,28 @@
+from datetime import timedelta
+import secrets
+import requests
+
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.models import User
 from django.contrib import messages, auth
 from django.contrib.auth.decorators import login_required, user_passes_test
-from django.contrib import messages, auth
-from django.contrib.auth.decorators import login_required, user_passes_test
-from .models import Student, Teacher, Student_attendance, StudentLogin, SchoolClass, Subject, StudentResult, Timetable, SchoolSettings
+from django.contrib.auth.hashers import make_password, check_password
+from django.utils import timezone
+from django.conf import settings
 from django.views.decorators.cache import never_cache
+from django.db import transaction
+
 from rest_framework.decorators import api_view, permission_classes
-from .serializers import StudentSerializer
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
-from django.db import transaction
-from django.core.mail import send_mail
-import secrets
-from datetime import timedelta
-from django.utils import timezone
-from django.contrib.auth.hashers import make_password, check_password
-# Create your views here.
+
+from .models import (
+    Student, Teacher, Student_attendance, StudentLogin,
+    SchoolClass, Subject, StudentResult, Timetable,
+    SchoolSettings
+)
+from .serializers import StudentSerializer# Create your views here.
 
 
 def index(request):
@@ -287,10 +292,14 @@ def confirm_student_id(request):
         request.session['student_id'] = student.student_id
         request.session['verification_passed'] = False
 
-        test_mail(request, student)
+        if test_mail(request, student):
+            return redirect('verify_student')
 
-        return redirect('verify_student')
+        messages.error(
+        request,
+        'Unable to send verification email. Please try again later.')
 
+        return redirect('confirm_student_id')
     return render(request, 'confirm_student_id.html')
 
 
@@ -301,19 +310,48 @@ def test_mail(request, student):
 
     code = str(secrets.randbelow(900000) + 100000)
 
-    request.session['verification_code'] = make_password(code)
+    url = "https://api.brevo.com/v3/smtp/email"
 
-    request.session['verification_expiry'] = (
-        timezone.now() + timedelta(minutes=5)
-    ).timestamp()
+    headers = {
+        "accept": "application/json",
+        "api-key": settings.BREVO_API_KEY,
+        "content-type": "application/json"
+    }
 
-    send_mail(
-        'Confirmation Of The Student',
-        f'Your Confirmation Code is {code}',
-        None,
-        [email],
-        fail_silently=False
-    )
+    data = {
+        "sender": {
+            "name": "EduManage",
+            "email": settings.DEFAULT_FROM_EMAIL
+        },
+        "to": [
+            {"email": email}
+        ],
+        "subject": "Confirmation Of The Student",
+        "textContent": f"Your confirmation code is {code}"
+    }
+
+    try:
+        response = requests.post(
+            url,
+            headers=headers,
+            json=data,
+            timeout=20
+        )
+
+        response.raise_for_status()
+
+        request.session['verification_code'] = make_password(code)
+        request.session['verification_expiry'] = (
+            timezone.now() + timedelta(minutes=5)
+        ).timestamp()
+
+        return True
+
+    except requests.RequestException as e:
+        print("Brevo email error:", e)
+
+    if e.response is not None:
+        print("Brevo response:", e.response.text)
 
 
 
